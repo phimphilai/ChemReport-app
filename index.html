@@ -1,577 +1,602 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>ChemReport | ระบบจัดการข้อมูลสารเคมี</title>
+<title>ChemReport</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
 
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-                   "Noto Sans Thai", Arial, sans-serif;
-      background: #f4f7fb;
-      color: #1e293b;
-    }
+*{
+box-sizing:border-box;
+}
 
-    button,
-    input,
-    select {
-      font-family: inherit;
-    }
+body{
+margin:0;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Thai",Arial,sans-serif;
+background:#f4f7fb;
+color:#1e293b;
+}
 
-    /* SIDEBAR */
+button,input,select{
+font-family:inherit;
+}
 
-    .sidebar {
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: 250px;
-      height: 100vh;
-      background: #0f4c81;
-      color: white;
-      padding: 24px 16px;
-      z-index: 100;
-    }
+.sidebar{
+position:fixed;
+left:0;
+top:0;
+width:250px;
+height:100vh;
+background:#0f4c81;
+color:white;
+padding:24px 16px;
+z-index:100;
+}
 
-    .logo {
-      text-align: center;
-      margin-bottom: 30px;
-    }
+.logo{
+text-align:center;
+margin-bottom:30px;
+}
 
-    .logo-icon {
-      font-size: 38px;
-    }
+.logo-icon{
+font-size:38px;
+}
 
-    .logo h1 {
-      margin: 5px 0 2px;
-      font-size: 23px;
-    }
+.logo h1{
+margin:5px 0;
+font-size:23px;
+}
 
-    .logo p {
-      margin: 0;
-      font-size: 12px;
-      opacity: .8;
-    }
+.logo p{
+margin:0;
+font-size:12px;
+opacity:.8;
+}
 
-    .menu {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+.menu{
+display:flex;
+flex-direction:column;
+gap:6px;
+}
 
-    .menu button {
-      width: 100%;
-      border: none;
-      background: transparent;
-      color: white;
-      text-align: left;
-      padding: 13px 15px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 14px;
-    }
+.menu button{
+width:100%;
+border:none;
+background:transparent;
+color:white;
+text-align:left;
+padding:13px 15px;
+border-radius:10px;
+cursor:pointer;
+font-size:14px;
+}
 
-    .menu button:hover,
-    .menu button.active {
-      background: rgba(255,255,255,.15);
-    }
+.menu button:hover,
+.menu button.active{
+background:rgba(255,255,255,.15);
+}
 
-    /* MAIN */
+.main{
+margin-left:250px;
+min-height:100vh;
+}
 
-    .main {
-      margin-left: 250px;
-      min-height: 100vh;
-    }
+.topbar{
+background:white;
+padding:18px 30px;
+border-bottom:1px solid #e2e8f0;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
 
-    .topbar {
-      background: white;
-      padding: 18px 30px;
-      border-bottom: 1px solid #e2e8f0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+.topbar h2{
+margin:0;
+font-size:22px;
+}
 
-    .topbar h2 {
-      margin: 0;
-      font-size: 22px;
-    }
+.user{
+background:#eaf3fb;
+color:#0f4c81;
+padding:9px 15px;
+border-radius:20px;
+font-size:13px;
+}
 
-    .user {
-      background: #eaf3fb;
-      color: #0f4c81;
-      padding: 9px 15px;
-      border-radius: 20px;
-      font-size: 13px;
-    }
+.content{
+padding:30px;
+}
 
-    .content {
-      padding: 30px;
-    }
+.notice{
+background:#fff8e6;
+border:1px solid #f5d77a;
+color:#795b00;
+padding:14px 18px;
+border-radius:12px;
+margin-bottom:25px;
+font-size:14px;
+}
 
-    /* NOTICE */
+.stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:18px;
+margin-bottom:25px;
+}
 
-    .notice {
-      background: #fff8e6;
-      border: 1px solid #f5d77a;
-      color: #795b00;
-      padding: 14px 18px;
-      border-radius: 12px;
-      margin-bottom: 25px;
-      font-size: 14px;
-    }
+.stat{
+background:white;
+padding:20px;
+border-radius:15px;
+border:1px solid #e2e8f0;
+box-shadow:0 3px 12px rgba(15,76,129,.06);
+}
 
-    /* STATS */
+.stat-title{
+color:#64748b;
+font-size:13px;
+}
 
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-      margin-bottom: 25px;
-    }
+.stat-number{
+font-size:30px;
+font-weight:700;
+color:#0f4c81;
+margin-top:7px;
+}
 
-    .stat {
-      background: white;
-      padding: 20px;
-      border-radius: 15px;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 3px 12px rgba(15,76,129,.06);
-    }
+.section{
+background:white;
+border-radius:16px;
+border:1px solid #e2e8f0;
+padding:24px;
+margin-bottom:25px;
+}
 
-    .stat-title {
-      color: #64748b;
-      font-size: 13px;
-    }
+.section-title{
+margin:0 0 18px;
+font-size:18px;
+}
 
-    .stat-number {
-      font-size: 30px;
-      font-weight: 700;
-      color: #0f4c81;
-      margin-top: 7px;
-    }
+.actions{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:14px;
+}
 
-    /* ACTIONS */
+.action{
+border:none;
+border-radius:12px;
+padding:18px 10px;
+cursor:pointer;
+background:#edf6ff;
+color:#0f4c81;
+font-size:14px;
+font-weight:600;
+}
 
-    .section {
-      background: white;
-      border-radius: 16px;
-      border: 1px solid #e2e8f0;
-      padding: 24px;
-      margin-bottom: 25px;
-    }
+.action:hover{
+background:#dceeff;
+transform:translateY(-2px);
+}
 
-    .section-title {
-      margin: 0 0 18px;
-      font-size: 18px;
-    }
+.action-icon{
+display:block;
+font-size:27px;
+margin-bottom:8px;
+}
 
-    .actions {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-    }
+.table-tools{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:15px;
+margin-bottom:18px;
+}
 
-    .action {
-      border: none;
-      border-radius: 12px;
-      padding: 18px 10px;
-      cursor: pointer;
-      background: #edf6ff;
-      color: #0f4c81;
-      font-size: 14px;
-      font-weight: 600;
-      transition: .2s;
-    }
+.search{
+width:350px;
+padding:12px 15px;
+border:1px solid #cbd5e1;
+border-radius:9px;
+outline:none;
+}
 
-    .action:hover {
-      transform: translateY(-2px);
-      background: #dceeff;
-    }
+.search:focus{
+border-color:#0f75bd;
+}
 
-    .action-icon {
-      display: block;
-      font-size: 27px;
-      margin-bottom: 8px;
-    }
+.table-wrapper{
+overflow-x:auto;
+}
 
-    /* TABLE */
+table{
+width:100%;
+border-collapse:collapse;
+min-width:850px;
+}
 
-    .table-tools {
-      display: flex;
-      justify-content: space-between;
-      gap: 15px;
-      margin-bottom: 15px;
-    }
+th{
+background:#f1f5f9;
+color:#475569;
+font-size:13px;
+text-align:left;
+padding:13px;
+}
 
-    .search {
-      flex: 1;
-      max-width: 350px;
-      padding: 12px 15px;
-      border: 1px solid #cbd5e1;
-      border-radius: 9px;
-      outline: none;
-    }
+td{
+padding:13px;
+border-bottom:1px solid #e2e8f0;
+font-size:13px;
+}
 
-    .search:focus {
-      border-color: #0f75bd;
-    }
+.risk{
+padding:5px 10px;
+border-radius:20px;
+font-size:12px;
+}
 
-    .table-wrapper {
-      overflow-x: auto;
-    }
+.risk-low{
+background:#dcfce7;
+color:#166534;
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 750px;
-    }
+.risk-medium{
+background:#fef3c7;
+color:#92400e;
+}
 
-    th {
-      background: #f1f5f9;
-      color: #475569;
-      font-size: 13px;
-      text-align: left;
-      padding: 13px;
-    }
+.risk-high{
+background:#fee2e2;
+color:#991b1b;
+}
 
-    td {
-      padding: 13px;
-      border-bottom: 1px solid #e2e8f0;
-      font-size: 13px;
-    }
+.sds{
+color:#166534;
+font-weight:600;
+}
 
-    .risk {
-      padding: 5px 10px;
-      border-radius: 20px;
-      font-size: 12px;
-    }
+.sds-pending{
+color:#b45309;
+font-weight:600;
+}
 
-    .risk-low {
-      background: #dcfce7;
-      color: #166534;
-    }
+.action-btn{
+border:none;
+padding:7px 10px;
+border-radius:7px;
+cursor:pointer;
+margin-right:4px;
+font-size:12px;
+}
 
-    .risk-medium {
-      background: #fef3c7;
-      color: #92400e;
-    }
+.view-btn{
+background:#e0f2fe;
+color:#0369a1;
+}
 
-    .risk-high {
-      background: #fee2e2;
-      color: #991b1b;
-    }
+.edit-btn{
+background:#fef3c7;
+color:#92400e;
+}
 
-    .sds {
-      color: #166534;
-      font-weight: 600;
-    }
+.delete-btn{
+background:#fee2e2;
+color:#991b1b;
+}
 
-    .sds-pending {
-      color: #b45309;
-      font-weight: 600;
-    }
+.empty{
+text-align:center;
+padding:40px;
+color:#64748b;
+}
 
-    /* FOOTER */
+footer{
+text-align:center;
+padding:25px;
+color:#64748b;
+font-size:12px;
+}
 
-    footer {
-      text-align: center;
-      padding: 25px;
-      color: #64748b;
-      font-size: 12px;
-    }
+@media(max-width:900px){
 
-    /* RESPONSIVE */
+.sidebar{
+width:210px;
+}
 
-    @media (max-width: 900px) {
-      .sidebar {
-        width: 210px;
-      }
+.main{
+margin-left:210px;
+}
 
-      .main {
-        margin-left: 210px;
-      }
+.stats,
+.actions{
+grid-template-columns:repeat(2,1fr);
+}
 
-      .stats,
-      .actions {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
+}
 
-    @media (max-width: 650px) {
-      .sidebar {
-        position: static;
-        width: 100%;
-        height: auto;
-      }
+@media(max-width:650px){
 
-      .main {
-        margin-left: 0;
-      }
+.sidebar{
+position:static;
+width:100%;
+height:auto;
+}
 
-      .stats,
-      .actions {
-        grid-template-columns: 1fr 1fr;
-      }
+.main{
+margin-left:0;
+}
 
-      .content {
-        padding: 15px;
-      }
-    }
-  </style>
+.stats,
+.actions{
+grid-template-columns:1fr 1fr;
+}
+
+.content{
+padding:15px;
+}
+
+.table-tools{
+align-items:stretch;
+flex-direction:column;
+}
+
+.search{
+width:100%;
+}
+
+}
+
+</style>
 </head>
+
 
 <body>
 
-  <!-- SIDEBAR -->
+<aside class="sidebar">
 
-  <aside class="sidebar">
+<div class="logo">
 
-    <div class="logo">
-      <div class="logo-icon">🧪</div>
-      <h1>ChemReport</h1>
-      <p>Chemical Management System</p>
-    </div>
+<div class="logo-icon">🧪</div>
 
-    <div class="menu">
+<h1>ChemReport</h1>
 
-      <button class="active" onclick="showPage('dashboard')">
-        🏠 Dashboard
-      </button>
+<p>Chemical Management System</p>
 
-      <button onclick="showNotification('หน้าข้อมูลสารเคมี')">
-        🧪 ข้อมูลสารเคมี
-      </button>
+</div>
 
-      <button onclick="showNotification('หน้าจัดการ SDS')">
-        📄 SDS
-      </button>
 
-      <button onclick="showNotification('ระบบวิเคราะห์ SDS ด้วย AI')">
-        🤖 วิเคราะห์ SDS ด้วย AI
-      </button>
+<div class="menu">
 
-      <button onclick="showNotification('หน้า Chemical Safety')">
-        ☣️ Chemical Safety
-      </button>
+<button onclick="showDashboard()">
+🏠 Dashboard
+</button>
 
-      <button onclick="showNotification('หน้าการจัดเก็บสารเคมี')">
-        🗄️ การจัดเก็บสารเคมี
-      </button>
+<button class="active" onclick="showChemicalPage()">
+🧪 ข้อมูลสารเคมี
+</button>
 
-      <button onclick="showNotification('หน้ารายงาน')">
-        📊 รายงาน
-      </button>
+<button onclick="showNotification('📄 ระบบจัดการ SDS')">
+📄 SDS
+</button>
 
-      <button onclick="showNotification('ตั้งค่าระบบ')">
-        ⚙️ ตั้งค่า
-      </button>
+<button onclick="showNotification('🤖 ระบบวิเคราะห์ SDS ด้วย AI')">
+🤖 วิเคราะห์ SDS ด้วย AI
+</button>
 
-    </div>
+<button onclick="showNotification('☣️ Chemical Safety')">
+☣️ Chemical Safety
+</button>
 
-  </aside>
+<button onclick="showNotification('🗄️ การจัดเก็บสารเคมี')">
+🗄️ การจัดเก็บสารเคมี
+</button>
 
+<button onclick="showNotification('📊 รายงาน')">
+📊 รายงาน
+</button>
 
-  <!-- MAIN -->
+<button onclick="showNotification('⚙️ ตั้งค่าระบบ')">
+⚙️ ตั้งค่า
+</button>
 
-  <main class="main">
+</div>
 
-    <header class="topbar">
-      <h2>Dashboard</h2>
+</aside>
 
-      <div class="user">
-        👤 ผู้ใช้งาน ChemReport
-      </div>
-    </header>
 
+<main class="main">
 
-    <div class="content">
+<header class="topbar">
 
-      <div class="notice">
-        💡 <strong>โหมดทดลอง:</strong>
-        ข้อมูลที่แสดงในระบบเป็นข้อมูลตัวอย่างสำหรับการทดสอบระบบ ChemReport
-      </div>
+<h2 id="pageTitle">
+🧪 ข้อมูลสารเคมี
+</h2>
 
+<div class="user">
+👤 ผู้ใช้งาน ChemReport
+</div>
 
-      <!-- STATS -->
+</header>
 
-      <div class="stats">
 
-        <div class="stat">
-          <div class="stat-title">สารเคมีทั้งหมด</div>
-          <div class="stat-number" id="totalChemicals">128</div>
-        </div>
+<div class="content">
 
-        <div class="stat">
-          <div class="stat-title">เอกสาร SDS</div>
-          <div class="stat-number" id="totalSDS">96</div>
-        </div>
 
-        <div class="stat">
-          <div class="stat-title">สารเคมีความเสี่ยงสูง</div>
-          <div class="stat-number" id="highRisk">12</div>
-        </div>
+<div class="notice">
 
-        <div class="stat">
-          <div class="stat-title">SDS รอตรวจสอบ</div>
-          <div class="stat-number" id="pendingSDS">18</div>
-        </div>
+💡 <strong>โหมดทดลอง:</strong>
+ข้อมูลสารเคมีในระบบเป็นข้อมูลตัวอย่างสำหรับการทดสอบ ChemReport
 
-      </div>
+</div>
 
 
-      <!-- QUICK ACTION -->
+<div class="stats">
 
-      <section class="section">
+<div class="stat">
 
-        <h3 class="section-title">
-          ⚡ การดำเนินการด่วน
-        </h3>
-
-        <div class="actions">
-
-          <button class="action" onclick="openChemicalModal()">
-            <span class="action-icon">➕</span>
-            เพิ่มสารเคมี
-          </button>
-
-          <button class="action" onclick="importSDS()">
-            <span class="action-icon">📄</span>
-            นำเข้า SDS
-          </button>
+<div class="stat-title">
+สารเคมีทั้งหมด
+</div>
 
-          <button class="action" onclick="analyzeSDS()">
-            <span class="action-icon">🤖</span>
-            วิเคราะห์ SDS ด้วย AI
-          </button>
+<div class="stat-number" id="totalChemicals">
+128
+</div>
 
-          <button class="action" onclick="viewReport()">
-            <span class="action-icon">📊</span>
-            ดูรายงาน
-          </button>
-
-        </div>
+</div>
 
-      </section>
 
+<div class="stat">
 
-      <!-- CHEMICAL TABLE -->
+<div class="stat-title">
+มี SDS
+</div>
 
-      <section class="section">
+<div class="stat-number" id="totalSDS">
+96
+</div>
 
-        <div class="table-tools">
+</div>
 
-          <h3 class="section-title" style="margin:0;">
-            🧪 รายการสารเคมี
-          </h3>
 
-          <input
-            class="search"
-            id="chemicalSearch"
-            type="search"
-            placeholder="🔎 ค้นหาชื่อสาร หรือ CAS Number..."
-          >
+<div class="stat">
 
-        </div>
+<div class="stat-title">
+สารความเสี่ยงสูง
+</div>
 
+<div class="stat-number" id="highRisk">
+12
+</div>
 
-        <div class="table-wrapper">
+</div>
 
-          <table id="chemicalTable">
 
-            <thead>
-              <tr>
-                <th>ชื่อสารเคมี</th>
-                <th>ชื่อภาษาไทย</th>
-                <th>CAS Number</th>
-                <th>ระดับความเสี่ยง</th>
-                <th>สถานะ SDS</th>
-              </tr>
-            </thead>
+<div class="stat">
 
-            <tbody id="chemicalTableBody">
+<div class="stat-title">
+รอตรวจสอบ SDS
+</div>
 
-              <tr>
-                <td>Ethanol</td>
-                <td>เอทานอล</td>
-                <td>64-17-5</td>
-                <td>
-                  <span class="risk risk-medium">
-                    ปานกลาง
-                  </span>
-                </td>
-                <td class="sds">✓ มี SDS</td>
-              </tr>
+<div class="stat-number" id="pendingSDS">
+18
+</div>
 
-              <tr>
-                <td>Acetone</td>
-                <td>อะซีโตน</td>
-                <td>67-64-1</td>
-                <td>
-                  <span class="risk risk-high">
-                    สูง
-                  </span>
-                </td>
-                <td class="sds">✓ มี SDS</td>
-              </tr>
+</div>
 
-              <tr>
-                <td>Hydrochloric Acid</td>
-                <td>กรดไฮโดรคลอริก</td>
-                <td>7647-01-0</td>
-                <td>
-                  <span class="risk risk-high">
-                    สูง
-                  </span>
-                </td>
-                <td class="sds-pending">
-                  ⚠ รอตรวจสอบ
-                </td>
-              </tr>
+</div>
 
-            </tbody>
 
-          </table>
+<section class="section">
 
-        </div>
 
-      </section>
+<div class="table-tools">
 
+<div>
 
-      <section class="section">
+<h3 class="section-title">
+🧪 รายการสารเคมี
+</h3>
 
-        <h3 class="section-title">
-          ✨ ความสามารถของ ChemReport
-        </h3>
+<div style="font-size:13px;color:#64748b;">
+จัดการข้อมูลสารเคมีในระบบ ChemReport
+</div>
 
-        <p>
-          ระบบ ChemReport ออกแบบเพื่อสนับสนุนการรายงานและจัดการข้อมูลสารเคมี
-          ช่วยให้สามารถค้นหา ตรวจสอบ และจัดการข้อมูลสารเคมีและเอกสาร SDS
-          ได้สะดวกและเป็นระบบมากขึ้น
-        </p>
+</div>
 
-      </section>
 
-    </div>
+<button class="action" onclick="openChemicalModal()" style="padding:12px 18px;">
 
+➕ เพิ่มสารเคมี
 
-    <footer>
-      ChemReport : นวัตกรรมเพื่อยกระดับประสิทธิภาพการรายงานและจัดการข้อมูลสารเคมี
-      <br>
-      คณะสาธารณสุขศาสตร์ มหาวิทยาลัยมหาสารคาม
-    </footer>
+</button>
 
-  </main>
+</div>
 
 
-  <!-- JAVASCRIPT -->
+<div class="table-tools">
 
-  <script src="app.js?v=20260915"></script>
+<input
+class="search"
+id="chemicalSearch"
+type="search"
+placeholder="🔎 ค้นหาชื่อสาร หรือ CAS Number..."
+>
+
+</div>
+
+
+<div class="table-wrapper">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>ชื่อสารเคมี</th>
+
+<th>ชื่อภาษาไทย</th>
+
+<th>CAS Number</th>
+
+<th>ระดับความเสี่ยง</th>
+
+<th>SDS</th>
+
+<th>จัดการ</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="chemicalTableBody">
+
+</tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<section class="section">
+
+<h3 class="section-title">
+📌 การจัดการข้อมูลสารเคมี
+</h3>
+
+<p style="color:#64748b;line-height:1.8;">
+
+ChemReport ช่วยให้ผู้ใช้งานสามารถเพิ่ม ค้นหา ตรวจสอบ
+แก้ไข และจัดการข้อมูลสารเคมีได้อย่างเป็นระบบ
+พร้อมแสดงสถานะของเอกสาร SDS เพื่อช่วยในการติดตามข้อมูล
+
+</p>
+
+</section>
+
+
+</div>
+
+
+<footer>
+
+ChemReport : นวัตกรรมเพื่อยกระดับประสิทธิภาพการรายงานและจัดการข้อมูลสารเคมี
+
+<br>
+
+คณะสาธารณสุขศาสตร์ มหาวิทยาลัยมหาสารคาม
+
+</footer>
+
+</main>
+
+
+<script src="app.js?v=20260915"></script>
 
 </body>
 </html>
