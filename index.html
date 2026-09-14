@@ -1,796 +1,577 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>ChemReport | Chemical Management System</title>
+  <title>ChemReport | ระบบจัดการข้อมูลสารเคมี</title>
 
-    <link rel="stylesheet" href="style.css">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   "Noto Sans Thai", Arial, sans-serif;
+      background: #f4f7fb;
+      color: #1e293b;
+    }
+
+    button,
+    input,
+    select {
+      font-family: inherit;
+    }
+
+    /* SIDEBAR */
+
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 250px;
+      height: 100vh;
+      background: #0f4c81;
+      color: white;
+      padding: 24px 16px;
+      z-index: 100;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo-icon {
+      font-size: 38px;
+    }
+
+    .logo h1 {
+      margin: 5px 0 2px;
+      font-size: 23px;
+    }
+
+    .logo p {
+      margin: 0;
+      font-size: 12px;
+      opacity: .8;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .menu button {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: white;
+      text-align: left;
+      padding: 13px 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .menu button:hover,
+    .menu button.active {
+      background: rgba(255,255,255,.15);
+    }
+
+    /* MAIN */
+
+    .main {
+      margin-left: 250px;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      background: white;
+      padding: 18px 30px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .topbar h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .user {
+      background: #eaf3fb;
+      color: #0f4c81;
+      padding: 9px 15px;
+      border-radius: 20px;
+      font-size: 13px;
+    }
+
+    .content {
+      padding: 30px;
+    }
+
+    /* NOTICE */
+
+    .notice {
+      background: #fff8e6;
+      border: 1px solid #f5d77a;
+      color: #795b00;
+      padding: 14px 18px;
+      border-radius: 12px;
+      margin-bottom: 25px;
+      font-size: 14px;
+    }
+
+    /* STATS */
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 25px;
+    }
+
+    .stat {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 3px 12px rgba(15,76,129,.06);
+    }
+
+    .stat-title {
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .stat-number {
+      font-size: 30px;
+      font-weight: 700;
+      color: #0f4c81;
+      margin-top: 7px;
+    }
+
+    /* ACTIONS */
+
+    .section {
+      background: white;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      padding: 24px;
+      margin-bottom: 25px;
+    }
+
+    .section-title {
+      margin: 0 0 18px;
+      font-size: 18px;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .action {
+      border: none;
+      border-radius: 12px;
+      padding: 18px 10px;
+      cursor: pointer;
+      background: #edf6ff;
+      color: #0f4c81;
+      font-size: 14px;
+      font-weight: 600;
+      transition: .2s;
+    }
+
+    .action:hover {
+      transform: translateY(-2px);
+      background: #dceeff;
+    }
+
+    .action-icon {
+      display: block;
+      font-size: 27px;
+      margin-bottom: 8px;
+    }
+
+    /* TABLE */
+
+    .table-tools {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .search {
+      flex: 1;
+      max-width: 350px;
+      padding: 12px 15px;
+      border: 1px solid #cbd5e1;
+      border-radius: 9px;
+      outline: none;
+    }
+
+    .search:focus {
+      border-color: #0f75bd;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 750px;
+    }
+
+    th {
+      background: #f1f5f9;
+      color: #475569;
+      font-size: 13px;
+      text-align: left;
+      padding: 13px;
+    }
+
+    td {
+      padding: 13px;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 13px;
+    }
+
+    .risk {
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+    }
+
+    .risk-low {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .risk-medium {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .risk-high {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .sds {
+      color: #166534;
+      font-weight: 600;
+    }
+
+    .sds-pending {
+      color: #b45309;
+      font-weight: 600;
+    }
+
+    /* FOOTER */
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 900px) {
+      .sidebar {
+        width: 210px;
+      }
+
+      .main {
+        margin-left: 210px;
+      }
+
+      .stats,
+      .actions {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 650px) {
+      .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+      }
+
+      .main {
+        margin-left: 0;
+      }
+
+      .stats,
+      .actions {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .content {
+        padding: 15px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-    <!-- ================= SIDEBAR ================= -->
+  <!-- SIDEBAR -->
 
-    <aside class="sidebar">
+  <aside class="sidebar">
 
-        <div class="logo">
+    <div class="logo">
+      <div class="logo-icon">🧪</div>
+      <h1>ChemReport</h1>
+      <p>Chemical Management System</p>
+    </div>
 
-            <div class="logo-icon">⚗️</div>
+    <div class="menu">
 
-            <div>
-                <h1>ChemReport</h1>
-                <span>Chemical Management</span>
-            </div>
+      <button class="active" onclick="showPage('dashboard')">
+        🏠 Dashboard
+      </button>
+
+      <button onclick="showNotification('หน้าข้อมูลสารเคมี')">
+        🧪 ข้อมูลสารเคมี
+      </button>
+
+      <button onclick="showNotification('หน้าจัดการ SDS')">
+        📄 SDS
+      </button>
+
+      <button onclick="showNotification('ระบบวิเคราะห์ SDS ด้วย AI')">
+        🤖 วิเคราะห์ SDS ด้วย AI
+      </button>
+
+      <button onclick="showNotification('หน้า Chemical Safety')">
+        ☣️ Chemical Safety
+      </button>
+
+      <button onclick="showNotification('หน้าการจัดเก็บสารเคมี')">
+        🗄️ การจัดเก็บสารเคมี
+      </button>
+
+      <button onclick="showNotification('หน้ารายงาน')">
+        📊 รายงาน
+      </button>
+
+      <button onclick="showNotification('ตั้งค่าระบบ')">
+        ⚙️ ตั้งค่า
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+    <header class="topbar">
+      <h2>Dashboard</h2>
+
+      <div class="user">
+        👤 ผู้ใช้งาน ChemReport
+      </div>
+    </header>
+
+
+    <div class="content">
+
+      <div class="notice">
+        💡 <strong>โหมดทดลอง:</strong>
+        ข้อมูลที่แสดงในระบบเป็นข้อมูลตัวอย่างสำหรับการทดสอบระบบ ChemReport
+      </div>
+
+
+      <!-- STATS -->
+
+      <div class="stats">
+
+        <div class="stat">
+          <div class="stat-title">สารเคมีทั้งหมด</div>
+          <div class="stat-number" id="totalChemicals">128</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-title">เอกสาร SDS</div>
+          <div class="stat-number" id="totalSDS">96</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-title">สารเคมีความเสี่ยงสูง</div>
+          <div class="stat-number" id="highRisk">12</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-title">SDS รอตรวจสอบ</div>
+          <div class="stat-number" id="pendingSDS">18</div>
+        </div>
+
+      </div>
+
+
+      <!-- QUICK ACTION -->
+
+      <section class="section">
+
+        <h3 class="section-title">
+          ⚡ การดำเนินการด่วน
+        </h3>
+
+        <div class="actions">
+
+          <button class="action" onclick="openChemicalModal()">
+            <span class="action-icon">➕</span>
+            เพิ่มสารเคมี
+          </button>
+
+          <button class="action" onclick="importSDS()">
+            <span class="action-icon">📄</span>
+            นำเข้า SDS
+          </button>
+
+          <button class="action" onclick="analyzeSDS()">
+            <span class="action-icon">🤖</span>
+            วิเคราะห์ SDS ด้วย AI
+          </button>
+
+          <button class="action" onclick="viewReport()">
+            <span class="action-icon">📊</span>
+            ดูรายงาน
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- CHEMICAL TABLE -->
+
+      <section class="section">
+
+        <div class="table-tools">
+
+          <h3 class="section-title" style="margin:0;">
+            🧪 รายการสารเคมี
+          </h3>
+
+          <input
+            class="search"
+            id="chemicalSearch"
+            type="search"
+            placeholder="🔎 ค้นหาชื่อสาร หรือ CAS Number..."
+          >
 
         </div>
 
 
-        <nav class="sidebar-menu">
+        <div class="table-wrapper">
 
-            <a href="#" class="active">
-                <span>📊</span>
-                Dashboard
-            </a>
+          <table id="chemicalTable">
 
-            <a href="#chemical-section">
-                <span>🧪</span>
-                ข้อมูลสารเคมี
-            </a>
+            <thead>
+              <tr>
+                <th>ชื่อสารเคมี</th>
+                <th>ชื่อภาษาไทย</th>
+                <th>CAS Number</th>
+                <th>ระดับความเสี่ยง</th>
+                <th>สถานะ SDS</th>
+              </tr>
+            </thead>
 
-            <a href="#">
-                <span>📄</span>
-                SDS
-            </a>
+            <tbody id="chemicalTableBody">
 
-            <a href="#">
-                <span>🤖</span>
-                วิเคราะห์ SDS ด้วย AI
-            </a>
+              <tr>
+                <td>Ethanol</td>
+                <td>เอทานอล</td>
+                <td>64-17-5</td>
+                <td>
+                  <span class="risk risk-medium">
+                    ปานกลาง
+                  </span>
+                </td>
+                <td class="sds">✓ มี SDS</td>
+              </tr>
 
-            <a href="#">
-                <span>🛡️</span>
-                Chemical Safety
-            </a>
+              <tr>
+                <td>Acetone</td>
+                <td>อะซีโตน</td>
+                <td>67-64-1</td>
+                <td>
+                  <span class="risk risk-high">
+                    สูง
+                  </span>
+                </td>
+                <td class="sds">✓ มี SDS</td>
+              </tr>
 
-            <a href="#">
-                <span>📦</span>
-                การจัดเก็บสารเคมี
-            </a>
+              <tr>
+                <td>Hydrochloric Acid</td>
+                <td>กรดไฮโดรคลอริก</td>
+                <td>7647-01-0</td>
+                <td>
+                  <span class="risk risk-high">
+                    สูง
+                  </span>
+                </td>
+                <td class="sds-pending">
+                  ⚠ รอตรวจสอบ
+                </td>
+              </tr>
 
-            <a href="#">
-                <span>📈</span>
-                รายงาน
-            </a>
+            </tbody>
 
-        </nav>
-
-
-        <div class="sidebar-bottom">
-
-            <a href="#">
-                <span>⚙️</span>
-                ตั้งค่าระบบ
-            </a>
-
-            <a href="#">
-                <span>🚪</span>
-                ออกจากระบบ
-            </a>
-
-        </div>
-
-    </aside>
-
-
-    <!-- ================= MAIN CONTENT ================= -->
-
-    <main class="main-content">
-
-
-        <!-- TOPBAR -->
-
-        <header class="topbar">
-
-            <div>
-
-                <h2>Dashboard</h2>
-
-                <p>
-                    ภาพรวมข้อมูลสารเคมีและเอกสารความปลอดภัย
-                </p>
-
-            </div>
-
-
-            <div class="topbar-right">
-
-                <button
-                    class="notification-btn"
-                    onclick="showNotification('ไม่มีการแจ้งเตือนใหม่')"
-                >
-                    🔔
-                </button>
-
-
-                <div class="user-profile">
-
-                    <div class="user-avatar">
-                        👤
-                    </div>
-
-                    <div>
-
-                        <strong>
-                            ผู้ดูแลระบบ
-                        </strong>
-
-                        <small>
-                            เจ้าหน้าที่ความปลอดภัย
-                        </small>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </header>
-
-
-
-        <!-- ================= DEMO NOTICE ================= -->
-
-        <div class="demo-notice">
-
-            <span>ℹ️</span>
-
-            <div>
-
-                <strong>
-                    โหมดสาธิต
-                </strong>
-
-                <p>
-                    ข้อมูลที่แสดงเป็นข้อมูลตัวอย่างสำหรับการนำเสนอระบบ
-                </p>
-
-            </div>
+          </table>
 
         </div>
 
+      </section>
 
 
-        <!-- ================= STATISTICS ================= -->
+      <section class="section">
 
-        <section class="stats-grid">
+        <h3 class="section-title">
+          ✨ ความสามารถของ ChemReport
+        </h3>
 
+        <p>
+          ระบบ ChemReport ออกแบบเพื่อสนับสนุนการรายงานและจัดการข้อมูลสารเคมี
+          ช่วยให้สามารถค้นหา ตรวจสอบ และจัดการข้อมูลสารเคมีและเอกสาร SDS
+          ได้สะดวกและเป็นระบบมากขึ้น
+        </p>
 
-            <div class="stat-card">
+      </section>
 
-                <div class="stat-icon">
-                    🧪
-                </div>
+    </div>
 
-                <div>
 
-                    <span>
-                        สารเคมีทั้งหมด
-                    </span>
+    <footer>
+      ChemReport : นวัตกรรมเพื่อยกระดับประสิทธิภาพการรายงานและจัดการข้อมูลสารเคมี
+      <br>
+      คณะสาธารณสุขศาสตร์ มหาวิทยาลัยมหาสารคาม
+    </footer>
 
-                    <strong>
-                        128
-                    </strong>
+  </main>
 
-                    <small>
-                        รายการ
-                    </small>
 
-                </div>
+  <!-- JAVASCRIPT -->
 
-            </div>
-
-
-
-            <div class="stat-card">
-
-                <div class="stat-icon">
-                    📄
-                </div>
-
-                <div>
-
-                    <span>
-                        เอกสาร SDS
-                    </span>
-
-                    <strong>
-                        96
-                    </strong>
-
-                    <small>
-                        เอกสาร
-                    </small>
-
-                </div>
-
-            </div>
-
-
-
-            <div class="stat-card">
-
-                <div class="stat-icon">
-                    ⚠️
-                </div>
-
-                <div>
-
-                    <span>
-                        สารเคมีความเสี่ยงสูง
-                    </span>
-
-                    <strong>
-                        12
-                    </strong>
-
-                    <small>
-                        รายการ
-                    </small>
-
-                </div>
-
-            </div>
-
-
-
-            <div class="stat-card">
-
-                <div class="stat-icon">
-                    🔍
-                </div>
-
-                <div>
-
-                    <span>
-                        SDS รอตรวจสอบ
-                    </span>
-
-                    <strong>
-                        18
-                    </strong>
-
-                    <small>
-                        เอกสาร
-                    </small>
-
-                </div>
-
-            </div>
-
-
-        </section>
-
-
-
-        <!-- ================= QUICK ACTIONS ================= -->
-
-        <section class="section">
-
-
-            <div class="section-header">
-
-                <div>
-
-                    <h3>
-                        เมนูด่วน
-                    </h3>
-
-                    <p>
-                        เข้าถึงฟังก์ชันที่ใช้งานบ่อย
-                    </p>
-
-                </div>
-
-            </div>
-
-
-
-            <div class="quick-actions">
-
-
-                <!-- ADD CHEMICAL -->
-
-                <button
-                    class="quick-action add-chemical"
-                    type="button"
-                >
-
-                    <span>
-                        ➕
-                    </span>
-
-                    <strong>
-                        เพิ่มสารเคมี
-                    </strong>
-
-                    <small>
-                        เพิ่มข้อมูลสารเคมีใหม่
-                    </small>
-
-                </button>
-
-
-
-                <!-- IMPORT SDS -->
-
-                <button
-                    class="quick-action import-sds"
-                    type="button"
-                >
-
-                    <span>
-                        📄
-                    </span>
-
-                    <strong>
-                        นำเข้า SDS
-                    </strong>
-
-                    <small>
-                        เพิ่มเอกสาร SDS
-                    </small>
-
-                </button>
-
-
-
-                <!-- AI ANALYSIS -->
-
-                <button
-                    class="quick-action analyze-sds"
-                    type="button"
-                >
-
-                    <span>
-                        🤖
-                    </span>
-
-                    <strong>
-                        วิเคราะห์ SDS
-                    </strong>
-
-                    <small>
-                        ใช้ AI ช่วยวิเคราะห์ข้อมูล
-                    </small>
-
-                </button>
-
-
-
-                <!-- REPORT -->
-
-                <button
-                    class="quick-action view-report"
-                    type="button"
-                >
-
-                    <span>
-                        📊
-                    </span>
-
-                    <strong>
-                        ดูรายงาน
-                    </strong>
-
-                    <small>
-                        ตรวจสอบข้อมูลและสถิติ
-                    </small>
-
-                </button>
-
-
-            </div>
-
-        </section>
-
-
-
-        <!-- ================= CHEMICAL SECTION ================= -->
-
-        <section
-            class="section"
-            id="chemical-section"
-        >
-
-
-            <div class="section-header">
-
-                <div>
-
-                    <h3>
-                        รายการสารเคมีล่าสุด
-                    </h3>
-
-                    <p>
-                        ข้อมูลสารเคมีที่บันทึกในระบบ
-                    </p>
-
-                </div>
-
-
-                <button
-                    class="view-all"
-                    type="button"
-                    onclick="document.getElementById('chemicalSearch').focus()"
-                >
-                    ดูทั้งหมด →
-                </button>
-
-            </div>
-
-
-
-            <!-- SEARCH -->
-
-            <div class="chemical-search">
-
-                <input
-                    type="text"
-                    id="chemicalSearch"
-                    placeholder="🔎 ค้นหาชื่อสารเคมี หรือ CAS Number..."
-                    autocomplete="off"
-                >
-
-            </div>
-
-
-
-            <!-- TABLE -->
-
-            <div class="table-container">
-
-                <table
-                    class="chemical-table"
-                    id="chemicalTable"
-                >
-
-                    <thead>
-
-                        <tr>
-
-                            <th>
-                                ชื่อสารเคมี
-                            </th>
-
-                            <th>
-                                CAS Number
-                            </th>
-
-                            <th>
-                                ประเภทความเสี่ยง
-                            </th>
-
-                            <th>
-                                สถานะ SDS
-                            </th>
-
-                            <th>
-                                การจัดการ
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-
-
-                    <tbody>
-
-
-                        <!-- CHEMICAL 1 -->
-
-                        <tr>
-
-                            <td>
-
-                                <strong>
-                                    Sodium Chloride
-                                </strong>
-
-                                <small>
-                                    โซเดียมคลอไรด์
-                                </small>
-
-                            </td>
-
-
-                            <td>
-                                7647-14-5
-                            </td>
-
-
-                            <td>
-
-                                <span class="badge normal">
-                                    ความเสี่ยงต่ำ
-                                </span>
-
-                            </td>
-
-
-                            <td>
-
-                                <span class="badge success">
-                                    ✓ มี SDS
-                                </span>
-
-                            </td>
-
-
-                            <td>
-
-                                <button
-                                    class="table-btn"
-                                    onclick="showNotification('กำลังเปิดข้อมูล Sodium Chloride')"
-                                >
-                                    ดูข้อมูล
-                                </button>
-
-                            </td>
-
-                        </tr>
-
-
-
-                        <!-- CHEMICAL 2 -->
-
-                        <tr>
-
-                            <td>
-
-                                <strong>
-                                    Ethanol
-                                </strong>
-
-                                <small>
-                                    เอทานอล
-                                </small>
-
-                            </td>
-
-
-                            <td>
-                                64-17-5
-                            </td>
-
-
-                            <td>
-
-                                <span class="badge warning">
-                                    ความเสี่ยงปานกลาง
-                                </span>
-
-                            </td>
-
-
-                            <td>
-
-                                <span class="badge success">
-                                    ✓ มี SDS
-                                </span>
-
-                            </td>
-
-
-                            <td>
-
-                                <button
-                                    class="table-btn"
-                                    onclick="showNotification('กำลังเปิดข้อมูล Ethanol')"
-                                >
-                                    ดูข้อมูล
-                                </button>
-
-                            </td>
-
-                        </tr>
-
-
-
-                        <!-- CHEMICAL 3 -->
-
-                        <tr>
-
-                            <td>
-
-                                <strong>
-                                    Hydrochloric Acid
-                                </strong>
-
-                                <small>
-                                    กรดไฮโดรคลอริก
-                                </small>
-
-                            </td>
-
-
-                            <td>
-                                7647-01-0
-                            </td>
-
-
-                            <td>
-
-                                <span class="badge danger">
-                                    ความเสี่ยงสูง
-                                </span>
-
-                            </td>
-
-
-                            <td>
-
-                                <span class="badge pending">
-                                    ⚠ รอตรวจสอบ
-                                </span>
-
-                            </td>
-
-
-                            <td>
-
-                                <button
-                                    class="table-btn"
-                                    onclick="showNotification('กำลังเปิดข้อมูล Hydrochloric Acid')"
-                                >
-                                    ดูข้อมูล
-                                </button>
-
-                            </td>
-
-                        </tr>
-
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- ================= SYSTEM FEATURES ================= -->
-
-        <section class="section">
-
-
-            <div class="section-header">
-
-                <div>
-
-                    <h3>
-                        ความสามารถของ ChemReport
-                    </h3>
-
-                    <p>
-                        ระบบสนับสนุนการจัดการข้อมูลสารเคมีและ SDS
-                    </p>
-
-                </div>
-
-            </div>
-
-
-
-            <div class="quick-actions">
-
-
-                <div class="quick-action">
-
-                    <span>
-                        🔎
-                    </span>
-
-                    <strong>
-                        ค้นหาข้อมูล
-                    </strong>
-
-                    <small>
-                        ค้นหาสารเคมีและ CAS Number ได้รวดเร็ว
-                    </small>
-
-                </div>
-
-
-
-                <div class="quick-action">
-
-                    <span>
-                        📑
-                    </span>
-
-                    <strong>
-                        จัดการ SDS
-                    </strong>
-
-                    <small>
-                        จัดเก็บและตรวจสอบเอกสารความปลอดภัย
-                    </small>
-
-                </div>
-
-
-
-                <div class="quick-action">
-
-                    <span>
-                        🤖
-                    </span>
-
-                    <strong>
-                        AI ช่วยวิเคราะห์
-                    </strong>
-
-                    <small>
-                        ช่วยดึงข้อมูลสำคัญจากเอกสาร SDS
-                    </small>
-
-                </div>
-
-
-
-                <div class="quick-action">
-
-                    <span>
-                        🛡️
-                    </span>
-
-                    <strong>
-                        Chemical Safety
-                    </strong>
-
-                    <small>
-                        สนับสนุนการตรวจสอบความปลอดภัยสารเคมี
-                    </small>
-
-                </div>
-
-
-            </div>
-
-        </section>
-
-
-
-        <!-- ================= FOOTER ================= -->
-
-        <footer>
-
-            <p>
-
-                ChemReport © 2026
-
-                <span>
-                    ระบบจัดการสารเคมีและเอกสาร SDS
-                </span>
-
-            </p>
-
-        </footer>
-
-
-    </main>
-
-
-
-    <!-- ================= JAVASCRIPT ================= -->
-
-    <script src="app.js"></script>
-
+  <script src="app.js?v=20260915"></script>
 
 </body>
 </html>
