@@ -1,6 +1,6 @@
 /* =====================================
    ChemReport
-   Chemical Management
+   Chemical Management System
 ===================================== */
 
 
@@ -8,1002 +8,1156 @@
 
 let chemicals = [
 
-{
-name:"Ethanol",
-thaiName:"เอทานอล",
-cas:"64-17-5",
-risk:"ปานกลาง",
-sds:true
-},
+    {
+        name: "Ethanol",
+        thaiName: "เอทานอล",
+        cas: "64-17-5",
+        risk: "ปานกลาง",
+        sds: true
+    },
 
-{
-name:"Acetone",
-thaiName:"อะซีโตน",
-cas:"67-64-1",
-risk:"สูง",
-sds:true
-},
+    {
+        name: "Acetone",
+        thaiName: "อะซีโตน",
+        cas: "67-64-1",
+        risk: "สูง",
+        sds: true
+    },
 
-{
-name:"Hydrochloric Acid",
-thaiName:"กรดไฮโดรคลอริก",
-cas:"7647-01-0",
-risk:"สูง",
-sds:false
-},
+    {
+        name: "Hydrochloric Acid",
+        thaiName: "กรดไฮโดรคลอริก",
+        cas: "7647-01-0",
+        risk: "สูง",
+        sds: false
+    },
 
-{
-name:"Sodium Chloride",
-thaiName:"โซเดียมคลอไรด์",
-cas:"7647-14-5",
-risk:"ต่ำ",
-sds:true
-}
+    {
+        name: "Sodium Chloride",
+        thaiName: "โซเดียมคลอไรด์",
+        cas: "7647-14-5",
+        risk: "ต่ำ",
+        sds: true
+    }
 
 ];
 
 
 /* ---------- START ---------- */
 
-document.addEventListener("DOMContentLoaded",function(){
+document.addEventListener("DOMContentLoaded", function () {
 
-renderChemicals();
+    ensureChemicalTable();
 
-setupSearch();
+    renderChemicals();
+
+    setupSearch();
 
 });
+
+
+/* ---------- MAKE SURE TABLE EXISTS ---------- */
+
+function ensureChemicalTable() {
+
+    let tableBody = document.getElementById("chemicalTableBody");
+
+    if (tableBody) {
+        return;
+    }
+
+    const table = document.querySelector("table");
+
+    if (!table) {
+        return;
+    }
+
+    tableBody = document.createElement("tbody");
+
+    tableBody.id = "chemicalTableBody";
+
+    table.appendChild(tableBody);
+
+}
 
 
 /* ---------- RENDER TABLE ---------- */
 
-function renderChemicals(){
+function renderChemicals(keyword = "") {
 
-const tableBody =
-document.getElementById("chemicalTableBody");
+    const tableBody =
+        document.getElementById("chemicalTableBody");
 
-if(!tableBody)return;
+    if (!tableBody) {
+        return;
+    }
 
-tableBody.innerHTML="";
+    const search =
+        keyword.toLowerCase().trim();
 
 
-if(chemicals.length===0){
+    const filteredChemicals =
+        chemicals.filter(function (chemical) {
 
-tableBody.innerHTML=`
+            return (
 
-<tr>
+                chemical.name
+                    .toLowerCase()
+                    .includes(search)
 
-<td colspan="6" class="empty">
+                ||
 
-🧪 ยังไม่มีข้อมูลสารเคมี
+                chemical.thaiName
+                    .toLowerCase()
+                    .includes(search)
 
-</td>
+                ||
 
-</tr>
+                chemical.cas
+                    .toLowerCase()
+                    .includes(search)
 
-`;
+            );
 
-return;
+        });
+
+
+    tableBody.innerHTML = "";
+
+
+    /* ---------- NO RESULT ---------- */
+
+    if (filteredChemicals.length === 0) {
+
+        tableBody.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="6"
+                    style="
+                        text-align:center;
+                        padding:35px;
+                        color:#64748b;
+                    "
+                >
+
+                    🧪 ไม่พบข้อมูลสารเคมี
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    /* ---------- CREATE ROW ---------- */
+
+    filteredChemicals.forEach(function (chemical) {
+
+        const originalIndex =
+            chemicals.indexOf(chemical);
+
+
+        let riskClass = "risk-low";
+
+
+        if (chemical.risk === "ปานกลาง") {
+
+            riskClass = "risk-medium";
+
+        }
+
+
+        if (
+            chemical.risk === "สูง" ||
+            chemical.risk === "สูงมาก"
+        ) {
+
+            riskClass = "risk-high";
+
+        }
+
+
+        const sdsHTML = chemical.sds
+
+            ? `<span class="sds">✓ มี SDS</span>`
+
+            : `<span class="sds-pending">⚠ รอตรวจสอบ</span>`;
+
+
+        const row =
+            document.createElement("tr");
+
+
+        row.innerHTML = `
+
+            <td>
+
+                <strong>
+                    ${escapeHTML(chemical.name)}
+                </strong>
+
+            </td>
+
+
+            <td>
+
+                ${escapeHTML(chemical.thaiName)}
+
+            </td>
+
+
+            <td>
+
+                ${escapeHTML(chemical.cas)}
+
+            </td>
+
+
+            <td>
+
+                <span class="risk ${riskClass}">
+
+                    ${escapeHTML(chemical.risk)}
+
+                </span>
+
+            </td>
+
+
+            <td>
+
+                ${sdsHTML}
+
+            </td>
+
+
+            <td>
+
+                <button
+                    class="action-btn view-btn"
+                    onclick="viewChemical(${originalIndex})"
+                >
+                    ดู
+                </button>
+
+
+                <button
+                    class="action-btn edit-btn"
+                    onclick="editChemical(${originalIndex})"
+                >
+                    แก้ไข
+                </button>
+
+
+                <button
+                    class="action-btn delete-btn"
+                    onclick="deleteChemical(${originalIndex})"
+                >
+                    ลบ
+                </button>
+
+            </td>
+
+        `;
+
+
+        tableBody.appendChild(row);
+
+    });
+
+
+    updateStatistics();
 
 }
 
 
-chemicals.forEach(function(chemical,index){
+/* ---------- ADD CHEMICAL ---------- */
 
-const row=document.createElement("tr");
+function openChemicalModal() {
 
+    const old =
+        document.getElementById("chemicalModal");
 
-let riskClass="risk-low";
+    if (old) {
+        old.remove();
+    }
 
-if(chemical.risk==="ปานกลาง"){
-riskClass="risk-medium";
-}
 
-if(
-chemical.risk==="สูง" ||
-chemical.risk==="สูงมาก"
-){
-riskClass="risk-high";
-}
+    const modal =
+        document.createElement("div");
 
 
-const sdsHTML=chemical.sds
-?`<span class="sds">✓ มี SDS</span>`
-:`<span class="sds-pending">⚠ รอตรวจสอบ</span>`;
+    modal.id =
+        "chemicalModal";
 
 
-row.innerHTML=`
+    modal.style.cssText = `
 
-<td>
-<strong>${escapeHTML(chemical.name)}</strong>
-</td>
+        position:fixed;
+        inset:0;
+        background:rgba(15,23,42,.55);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding:20px;
+        z-index:99999;
 
-<td>
-${escapeHTML(chemical.thaiName)}
-</td>
+    `;
 
-<td>
-${escapeHTML(chemical.cas)}
-</td>
 
-<td>
+    modal.innerHTML = `
 
-<span class="risk ${riskClass}">
-${escapeHTML(chemical.risk)}
-</span>
+        <div style="
+            background:white;
+            width:100%;
+            max-width:520px;
+            padding:28px;
+            border-radius:18px;
+            box-shadow:0 20px 60px rgba(0,0,0,.25);
+        ">
 
-</td>
 
-<td>
-${sdsHTML}
-</td>
+            <h2 style="
+                margin-top:0;
+                color:#0f4c81;
+            ">
 
-<td>
+                ➕ เพิ่มสารเคมี
 
-<button
-class="action-btn view-btn"
-onclick="viewChemical(${index})"
->
-ดู
-</button>
+            </h2>
 
-<button
-class="action-btn edit-btn"
-onclick="editChemical(${index})"
->
-แก้ไข
-</button>
 
-<button
-class="action-btn delete-btn"
-onclick="deleteChemical(${index})"
->
-ลบ
-</button>
+            <p style="
+                color:#64748b;
+                font-size:13px;
+            ">
 
-</td>
+                กรอกข้อมูลสารเคมีเพื่อเพิ่มเข้าสู่ระบบ
 
-`;
+            </p>
 
 
-tableBody.appendChild(row);
+            <label>
+                ชื่อสารเคมี *
+            </label>
 
-});
 
+            <input
+                id="chemicalName"
+                placeholder="เช่น Ethanol"
+                style="
+                    width:100%;
+                    padding:12px;
+                    margin:7px 0 15px;
+                    border:1px solid #cbd5e1;
+                    border-radius:8px;
+                    box-sizing:border-box;
+                "
+            >
 
-updateStatistics();
 
-}
+            <label>
+                ชื่อภาษาไทย
+            </label>
 
 
-/* ---------- ADD ---------- */
+            <input
+                id="chemicalThaiName"
+                placeholder="เช่น เอทานอล"
+                style="
+                    width:100%;
+                    padding:12px;
+                    margin:7px 0 15px;
+                    border:1px solid #cbd5e1;
+                    border-radius:8px;
+                    box-sizing:border-box;
+                "
+            >
 
-function openChemicalModal(){
 
-const old=document.getElementById("chemicalModal");
+            <label>
+                CAS Number *
+            </label>
 
-if(old)old.remove();
 
+            <input
+                id="chemicalCAS"
+                placeholder="เช่น 64-17-5"
+                style="
+                    width:100%;
+                    padding:12px;
+                    margin:7px 0 15px;
+                    border:1px solid #cbd5e1;
+                    border-radius:8px;
+                    box-sizing:border-box;
+                "
+            >
 
-const modal=document.createElement("div");
 
-modal.id="chemicalModal";
+            <label>
+                ระดับความเสี่ยง
+            </label>
 
-modal.style.cssText=`
-
-position:fixed;
-inset:0;
-background:rgba(15,23,42,.55);
-display:flex;
-align-items:center;
-justify-content:center;
-padding:20px;
-z-index:99999;
-
-`;
-
-
-modal.innerHTML=`
-
-<div style="
-background:white;
-width:100%;
-max-width:520px;
-padding:28px;
-border-radius:18px;
-box-shadow:0 20px 60px rgba(0,0,0,.25);
-">
-
-<h2 style="margin-top:0;color:#0f4c81;">
-➕ เพิ่มสารเคมี
-</h2>
-
-<p style="color:#64748b;font-size:13px;">
-กรอกข้อมูลสารเคมีเพื่อเพิ่มเข้าสู่ระบบ
-</p>
-
-
-<label>ชื่อสารเคมี *</label>
-
-<input
-id="chemicalName"
-placeholder="เช่น Ethanol"
-style="
-width:100%;
-padding:12px;
-margin:7px 0 15px;
-border:1px solid #cbd5e1;
-border-radius:8px;
-"
->
-
-
-<label>ชื่อภาษาไทย</label>
-
-<input
-id="chemicalThaiName"
-placeholder="เช่น เอทานอล"
-style="
-width:100%;
-padding:12px;
-margin:7px 0 15px;
-border:1px solid #cbd5e1;
-border-radius:8px;
-"
->
-
-
-<label>CAS Number *</label>
-
-<input
-id="chemicalCAS"
-placeholder="เช่น 64-17-5"
-style="
-width:100%;
-padding:12px;
-margin:7px 0 15px;
-border:1px solid #cbd5e1;
-border-radius:8px;
-"
->
-
-
-<label>ระดับความเสี่ยง</label>
-
-<select
-id="chemicalRisk"
-style="
-width:100%;
-padding:12px;
-margin:7px 0 20px;
-border:1px solid #cbd5e1;
-border-radius:8px;
-"
->
-
-<option>ต่ำ</option>
-<option>ปานกลาง</option>
-<option>สูง</option>
-<option>สูงมาก</option>
-
-</select>
-
-
-<div style="
-display:flex;
-justify-content:flex-end;
-gap:10px;
-">
-
-<button
-onclick="closeChemicalModal()"
-style="
-padding:11px 18px;
-border:1px solid #cbd5e1;
-background:white;
-border-radius:8px;
-"
->
-ยกเลิก
-</button>
-
-
-<button
-onclick="saveChemical()"
-style="
-padding:11px 20px;
-border:none;
-background:#0f4c81;
-color:white;
-border-radius:8px;
-"
->
-✓ บันทึก
-</button>
-
-</div>
-
-</div>
-
-`;
-
-
-document.body.appendChild(modal);
+
+            <select
+                id="chemicalRisk"
+                style="
+                    width:100%;
+                    padding:12px;
+                    margin:7px 0 20px;
+                    border:1px solid #cbd5e1;
+                    border-radius:8px;
+                    box-sizing:border-box;
+                "
+            >
+
+                <option>ต่ำ</option>
+                <option>ปานกลาง</option>
+                <option>สูง</option>
+                <option>สูงมาก</option>
+
+            </select>
+
+
+            <div style="
+                display:flex;
+                justify-content:flex-end;
+                gap:10px;
+            ">
+
+
+                <button
+                    onclick="closeChemicalModal()"
+                    style="
+                        padding:11px 18px;
+                        border:1px solid #cbd5e1;
+                        background:white;
+                        border-radius:8px;
+                    "
+                >
+
+                    ยกเลิก
+
+                </button>
+
+
+                <button
+                    onclick="saveChemical()"
+                    style="
+                        padding:11px 20px;
+                        border:none;
+                        background:#0f4c81;
+                        color:white;
+                        border-radius:8px;
+                    "
+                >
+
+                    ✓ บันทึก
+
+                </button>
+
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    document.body.appendChild(modal);
 
 }
 
 
-/* ---------- SAVE ---------- */
+/* ---------- SAVE CHEMICAL ---------- */
 
-function saveChemical(){
+function saveChemical() {
 
-const name=
-document.getElementById("chemicalName").value.trim();
-
-const thaiName=
-document.getElementById("chemicalThaiName").value.trim();
-
-const cas=
-document.getElementById("chemicalCAS").value.trim();
-
-const risk=
-document.getElementById("chemicalRisk").value;
+    const name =
+        document.getElementById("chemicalName")
+            .value.trim();
 
 
-if(!name){
-
-alert("กรุณากรอกชื่อสารเคมี");
-
-return;
-
-}
+    const thaiName =
+        document.getElementById("chemicalThaiName")
+            .value.trim();
 
 
-if(!cas){
-
-alert("กรุณากรอก CAS Number");
-
-return;
-
-}
+    const cas =
+        document.getElementById("chemicalCAS")
+            .value.trim();
 
 
-const duplicate=chemicals.some(function(item){
-
-return item.cas.toLowerCase()===cas.toLowerCase();
-
-});
+    const risk =
+        document.getElementById("chemicalRisk")
+            .value;
 
 
-if(duplicate){
+    if (!name) {
 
-alert("CAS Number นี้มีอยู่ในระบบแล้ว");
+        alert("กรุณากรอกชื่อสารเคมี");
 
-return;
+        return;
 
-}
-
-
-chemicals.push({
-
-name:name,
-
-thaiName:thaiName||"-",
-
-cas:cas,
-
-risk:risk,
-
-sds:false
-
-});
+    }
 
 
-closeChemicalModal();
+    if (!cas) {
 
-renderChemicals();
+        alert("กรุณากรอก CAS Number");
 
-showNotification(
-"✓ เพิ่มสารเคมีเรียบร้อยแล้ว"
-);
+        return;
 
-}
+    }
 
 
-/* ---------- CLOSE ---------- */
+    const duplicate =
+        chemicals.some(function (item) {
 
-function closeChemicalModal(){
+            return item.cas.toLowerCase() ===
+                cas.toLowerCase();
 
-const modal=
-document.getElementById("chemicalModal");
+        });
 
-if(modal){
 
-modal.remove();
+    if (duplicate) {
+
+        alert("CAS Number นี้มีอยู่ในระบบแล้ว");
+
+        return;
+
+    }
+
+
+    chemicals.push({
+
+        name: name,
+
+        thaiName: thaiName || "-",
+
+        cas: cas,
+
+        risk: risk,
+
+        sds: false
+
+    });
+
+
+    closeChemicalModal();
+
+
+    renderChemicals();
+
+
+    showNotification(
+        "✓ เพิ่มสารเคมีเรียบร้อยแล้ว"
+    );
 
 }
+
+
+/* ---------- CLOSE ADD MODAL ---------- */
+
+function closeChemicalModal() {
+
+    const modal =
+        document.getElementById("chemicalModal");
+
+    if (modal) {
+
+        modal.remove();
+
+    }
 
 }
 
 
 /* ---------- VIEW ---------- */
 
-function viewChemical(index){
+function viewChemical(index) {
 
-const chemical=chemicals[index];
+    const chemical =
+        chemicals[index];
 
-alert(
 
-"ข้อมูลสารเคมี\n\n"+
+    alert(
 
-"ชื่อสารเคมี: "+chemical.name+"\n"+
+        "ข้อมูลสารเคมี\n\n" +
 
-"ชื่อภาษาไทย: "+chemical.thaiName+"\n"+
+        "ชื่อสารเคมี: " +
+        chemical.name + "\n" +
 
-"CAS Number: "+chemical.cas+"\n"+
+        "ชื่อภาษาไทย: " +
+        chemical.thaiName + "\n" +
 
-"ระดับความเสี่ยง: "+chemical.risk+"\n"+
+        "CAS Number: " +
+        chemical.cas + "\n" +
 
-"SDS: "+(chemical.sds?"มี SDS":"รอตรวจสอบ")
+        "ระดับความเสี่ยง: " +
+        chemical.risk + "\n" +
 
-);
+        "SDS: " +
+        (
+            chemical.sds
+                ? "มี SDS"
+                : "รอตรวจสอบ"
+        )
+
+    );
 
 }
 
 
 /* ---------- EDIT ---------- */
 
-function editChemical(index){
+function editChemical(index) {
 
-const chemical=chemicals[index];
-
-
-const modal=document.createElement("div");
-
-modal.id="editChemicalModal";
+    const chemical =
+        chemicals[index];
 
 
-modal.style.cssText=`
-
-position:fixed;
-inset:0;
-background:rgba(15,23,42,.55);
-display:flex;
-align-items:center;
-justify-content:center;
-z-index:99999;
-padding:20px;
-
-`;
+    const modal =
+        document.createElement("div");
 
 
-modal.innerHTML=`
-
-<div style="
-background:white;
-width:100%;
-max-width:520px;
-padding:28px;
-border-radius:18px;
-">
-
-<h2 style="margin-top:0;color:#0f4c81;">
-✏️ แก้ไขข้อมูลสารเคมี
-</h2>
+    modal.id =
+        "editChemicalModal";
 
 
-<label>ชื่อสารเคมี</label>
+    modal.style.cssText = `
 
-<input
-id="editName"
-value="${escapeHTML(chemical.name)}"
-style="
-width:100%;
-padding:12px;
-margin:7px 0 15px;
-border:1px solid #cbd5e1;
-border-radius:8px;
-"
->
+        position:fixed;
+        inset:0;
+        background:rgba(15,23,42,.55);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        z-index:99999;
+        padding:20px;
 
-
-<label>ชื่อภาษาไทย</label>
-
-<input
-id="editThaiName"
-value="${escapeHTML(chemical.thaiName)}"
-style="
-width:100%;
-padding:12px;
-margin:7px 0 15px;
-border:1px solid #cbd5e1;
-border-radius:8px;
-"
->
+    `;
 
 
-<label>CAS Number</label>
+    modal.innerHTML = `
 
-<input
-id="editCAS"
-value="${escapeHTML(chemical.cas)}"
-style="
-width:100%;
-padding:12px;
-margin:7px 0 15px;
-border:1px solid #cbd5e1;
-border-radius:8px;
-"
->
+        <div style="
+            background:white;
+            width:100%;
+            max-width:520px;
+            padding:28px;
+            border-radius:18px;
+        ">
 
 
-<label>ระดับความเสี่ยง</label>
+            <h2 style="
+                margin-top:0;
+                color:#0f4c81;
+            ">
 
-<select
-id="editRisk"
-style="
-width:100%;
-padding:12px;
-margin:7px 0 20px;
-border:1px solid #cbd5e1;
-border-radius:8px;
-"
->
+                ✏️ แก้ไขข้อมูลสารเคมี
 
-<option ${chemical.risk==="ต่ำ"?"selected":""}>ต่ำ</option>
-
-<option ${chemical.risk==="ปานกลาง"?"selected":""}>ปานกลาง</option>
-
-<option ${chemical.risk==="สูง"?"selected":""}>สูง</option>
-
-<option ${chemical.risk==="สูงมาก"?"selected":""}>สูงมาก</option>
-
-</select>
+            </h2>
 
 
-<div style="
-display:flex;
-justify-content:flex-end;
-gap:10px;
-">
-
-<button
-onclick="document.getElementById('editChemicalModal').remove()"
-style="
-padding:11px 18px;
-background:white;
-border:1px solid #cbd5e1;
-border-radius:8px;
-"
->
-ยกเลิก
-</button>
+            <label>
+                ชื่อสารเคมี
+            </label>
 
 
-<button
-onclick="updateChemical(${index})"
-style="
-padding:11px 20px;
-background:#0f4c81;
-color:white;
-border:none;
-border-radius:8px;
-"
->
-บันทึก
-</button>
-
-</div>
-
-</div>
-
-`;
+            <input
+                id="editName"
+                value="${escapeHTML(chemical.name)}"
+                style="
+                    width:100%;
+                    padding:12px;
+                    margin:7px 0 15px;
+                    border:1px solid #cbd5e1;
+                    border-radius:8px;
+                    box-sizing:border-box;
+                "
+            >
 
 
-document.body.appendChild(modal);
+            <label>
+                ชื่อภาษาไทย
+            </label>
+
+
+            <input
+                id="editThaiName"
+                value="${escapeHTML(chemical.thaiName)}"
+                style="
+                    width:100%;
+                    padding:12px;
+                    margin:7px 0 15px;
+                    border:1px solid #cbd5e1;
+                    border-radius:8px;
+                    box-sizing:border-box;
+                "
+            >
+
+
+            <label>
+                CAS Number
+            </label>
+
+
+            <input
+                id="editCAS"
+                value="${escapeHTML(chemical.cas)}"
+                style="
+                    width:100%;
+                    padding:12px;
+                    margin:7px 0 15px;
+                    border:1px solid #cbd5e1;
+                    border-radius:8px;
+                    box-sizing:border-box;
+                "
+            >
+
+
+            <label>
+                ระดับความเสี่ยง
+            </label>
+
+
+            <select
+                id="editRisk"
+                style="
+                    width:100%;
+                    padding:12px;
+                    margin:7px 0 20px;
+                    border:1px solid #cbd5e1;
+                    border-radius:8px;
+                    box-sizing:border-box;
+                "
+            >
+
+                <option ${chemical.risk === "ต่ำ" ? "selected" : ""}>
+                    ต่ำ
+                </option>
+
+                <option ${chemical.risk === "ปานกลาง" ? "selected" : ""}>
+                    ปานกลาง
+                </option>
+
+                <option ${chemical.risk === "สูง" ? "selected" : ""}>
+                    สูง
+                </option>
+
+                <option ${chemical.risk === "สูงมาก" ? "selected" : ""}>
+                    สูงมาก
+                </option>
+
+            </select>
+
+
+            <div style="
+                display:flex;
+                justify-content:flex-end;
+                gap:10px;
+            ">
+
+
+                <button
+                    onclick="
+                        document
+                        .getElementById('editChemicalModal')
+                        .remove()
+                    "
+                    style="
+                        padding:11px 18px;
+                        background:white;
+                        border:1px solid #cbd5e1;
+                        border-radius:8px;
+                    "
+                >
+
+                    ยกเลิก
+
+                </button>
+
+
+                <button
+                    onclick="updateChemical(${index})"
+                    style="
+                        padding:11px 20px;
+                        background:#0f4c81;
+                        color:white;
+                        border:none;
+                        border-radius:8px;
+                    "
+                >
+
+                    บันทึก
+
+                </button>
+
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    document.body.appendChild(modal);
 
 }
 
 
 /* ---------- UPDATE ---------- */
 
-function updateChemical(index){
+function updateChemical(index) {
 
-const name=
-document.getElementById("editName").value.trim();
-
-const thaiName=
-document.getElementById("editThaiName").value.trim();
-
-const cas=
-document.getElementById("editCAS").value.trim();
-
-const risk=
-document.getElementById("editRisk").value;
+    const name =
+        document.getElementById("editName")
+            .value.trim();
 
 
-if(!name||!cas){
-
-alert("กรุณากรอกข้อมูลที่จำเป็น");
-
-return;
-
-}
+    const thaiName =
+        document.getElementById("editThaiName")
+            .value.trim();
 
 
-chemicals[index].name=name;
-
-chemicals[index].thaiName=thaiName||"-";
-
-chemicals[index].cas=cas;
-
-chemicals[index].risk=risk;
+    const cas =
+        document.getElementById("editCAS")
+            .value.trim();
 
 
-document
-.getElementById("editChemicalModal")
-.remove();
+    const risk =
+        document.getElementById("editRisk")
+            .value;
 
 
-renderChemicals();
+    if (!name || !cas) {
+
+        alert(
+            "กรุณากรอกข้อมูลที่จำเป็น"
+        );
+
+        return;
+
+    }
 
 
-showNotification(
-"✓ แก้ไขข้อมูลเรียบร้อยแล้ว"
-);
+    chemicals[index].name =
+        name;
+
+
+    chemicals[index].thaiName =
+        thaiName || "-";
+
+
+    chemicals[index].cas =
+        cas;
+
+
+    chemicals[index].risk =
+        risk;
+
+
+    const modal =
+        document.getElementById(
+            "editChemicalModal"
+        );
+
+
+    if (modal) {
+        modal.remove();
+    }
+
+
+    renderChemicals();
+
+
+    showNotification(
+        "✓ แก้ไขข้อมูลเรียบร้อยแล้ว"
+    );
 
 }
 
 
 /* ---------- DELETE ---------- */
 
-function deleteChemical(index){
+function deleteChemical(index) {
 
-const chemical=chemicals[index];
-
-
-const confirmDelete=
-confirm(
-"ต้องการลบสารเคมี\n\n"+
-chemical.name+
-"\nCAS: "+
-chemical.cas+
-"\n\nใช่หรือไม่?"
-);
+    const chemical =
+        chemicals[index];
 
 
-if(!confirmDelete){
+    const confirmDelete =
+        confirm(
 
-return;
+            "ต้องการลบสารเคมี\n\n" +
 
-}
+            chemical.name +
+
+            "\nCAS: " +
+
+            chemical.cas +
+
+            "\n\nใช่หรือไม่?"
+
+        );
 
 
-chemicals.splice(index,1);
+    if (!confirmDelete) {
+
+        return;
+
+    }
 
 
-renderChemicals();
+    chemicals.splice(index, 1);
 
 
-showNotification(
-"🗑️ ลบข้อมูลเรียบร้อยแล้ว"
-);
+    renderChemicals();
+
+
+    showNotification(
+        "🗑️ ลบข้อมูลเรียบร้อยแล้ว"
+    );
 
 }
 
 
 /* ---------- SEARCH ---------- */
 
-function setupSearch(){
+function setupSearch() {
 
-const search=
-document.getElementById("chemicalSearch");
-
-if(!search)return;
-
-
-search.addEventListener("input",function(){
-
-const keyword=
-search.value.toLowerCase().trim();
+    const search =
+        document.getElementById(
+            "chemicalSearch"
+        );
 
 
-const rows=
-document.querySelectorAll(
-"#chemicalTableBody tr"
-);
+    if (!search) {
+
+        return;
+
+    }
 
 
-rows.forEach(function(row){
+    search.addEventListener(
+        "input",
+        function () {
 
-const text=
-row.textContent.toLowerCase();
+            renderChemicals(
+                search.value
+            );
 
-
-row.style.display=
-text.includes(keyword)
-?""
-:"none";
-
-});
-
-});
+        }
+    );
 
 }
 
 
 /* ---------- STATISTICS ---------- */
 
-function updateStatistics(){
+function updateStatistics() {
 
-const total=
-document.getElementById("totalChemicals");
-
-if(total){
-
-total.textContent=
-128 + chemicals.length - 4;
-
-}
+    const total =
+        document.getElementById(
+            "totalChemicals"
+        );
 
 
-const sds=
-document.getElementById("totalSDS");
+    if (total) {
 
-if(sds){
+        total.textContent =
+            128 + chemicals.length - 4;
 
-sds.textContent=
-96 + chemicals.filter(c=>c.sds).length - 3;
-
-}
+    }
 
 
-const high=
-document.getElementById("highRisk");
-
-if(high){
-
-high.textContent=
-12 +
-chemicals.filter(
-c=>c.risk==="สูง"||c.risk==="สูงมาก"
-).length - 2;
-
-}
+    const sds =
+        document.getElementById(
+            "totalSDS"
+        );
 
 
-const pending=
-document.getElementById("pendingSDS");
+    if (sds) {
 
-if(pending){
+        sds.textContent =
+            96 +
+            chemicals.filter(
+                c => c.sds
+            ).length - 3;
 
-pending.textContent=
-18 +
-chemicals.filter(c=>!c.sds).length - 1;
+    }
 
-}
+
+    const high =
+        document.getElementById(
+            "highRisk"
+        );
+
+
+    if (high) {
+
+        high.textContent =
+            12 +
+            chemicals.filter(
+                c =>
+                    c.risk === "สูง" ||
+                    c.risk === "สูงมาก"
+            ).length - 2;
+
+    }
+
+
+    const pending =
+        document.getElementById(
+            "pendingSDS"
+        );
+
+
+    if (pending) {
+
+        pending.textContent =
+            18 +
+            chemicals.filter(
+                c => !c.sds
+            ).length - 1;
+
+    }
 
 }
 
 
 /* ---------- DASHBOARD ---------- */
 
-function showDashboard(){
+function showDashboard() {
 
-document.getElementById("pageTitle").textContent=
-"🏠 Dashboard";
+    const title =
+        document.getElementById(
+            "pageTitle"
+        );
 
-showNotification(
-"🏠 Dashboard"
-);
+
+    if (title) {
+
+        title.textContent =
+            "🏠 Dashboard";
+
+    }
+
+
+    showNotification(
+        "🏠 Dashboard"
+    );
 
 }
 
 
 /* ---------- CHEMICAL PAGE ---------- */
 
-function showChemicalPage(){
+function showChemicalPage() {
 
-document.getElementById("pageTitle").textContent=
-"🧪 ข้อมูลสารเคมี";
+    const title =
+        document.getElementById(
+            "pageTitle"
+        );
 
-showNotification(
-"🧪 ข้อมูลสารเคมี"
-);
+
+    if (title) {
+
+        title.textContent =
+            "🧪 ข้อมูลสารเคมี";
+
+    }
+
+
+    showNotification(
+        "🧪 ข้อมูลสารเคมี"
+    );
 
 }
 
 
 /* ---------- NOTIFICATION ---------- */
 
-function showNotification(message){
+function showNotification(message) {
 
-const old=
-document.getElementById("chemNotification");
-
-if(old)old.remove();
-
-
-const notification=
-document.createElement("div");
+    const old =
+        document.getElementById(
+            "chemNotification"
+        );
 
 
-notification.id=
-"chemNotification";
+    if (old) {
+        old.remove();
+    }
 
 
-notification.textContent=
-message;
+    const notification =
+        document.createElement("div");
 
 
-notification.style.cssText=`
-
-position:fixed;
-right:22px;
-bottom:22px;
-background:#0f4c81;
-color:white;
-padding:14px 20px;
-border-radius:10px;
-box-shadow:0 8px 30px rgba(0,0,0,.2);
-z-index:100000;
-font-size:14px;
-
-`;
+    notification.id =
+        "chemNotification";
 
 
-document.body.appendChild(notification);
+    notification.textContent =
+        message;
 
 
-setTimeout(function(){
+    notification.style.cssText = `
 
-if(notification){
-notification.remove();
-}
+        position:fixed;
+        right:22px;
+        bottom:22px;
+        background:#0f4c81;
+        color:white;
+        padding:14px 20px;
+        border-radius:10px;
+        box-shadow:0 8px 30px rgba(0,0,0,.2);
+        z-index:100000;
+        font-size:14px;
 
-},3000);
+    `;
+
+
+    document.body.appendChild(
+        notification
+    );
+
+
+    setTimeout(function () {
+
+        if (notification) {
+
+            notification.remove();
+
+        }
+
+    }, 3000);
 
 }
 
 
 /* ---------- SECURITY ---------- */
 
-function escapeHTML(value){
+function escapeHTML(value) {
 
-return String(value)
+    return String(value)
 
-.replace(/&/g,"&amp;")
+        .replace(/&/g, "&amp;")
 
-.replace(/</g,"&lt;")
+        .replace(/</g, "&lt;")
 
-.replace(/>/g,"&gt;")
+        .replace(/>/g, "&gt;")
 
-.replace(/"/g,"&quot;")
+        .replace(/"/g, "&quot;")
 
-.replace(/'/g,"&#039;");
+        .replace(/'/g, "&#039;");
 
 }
-// ===== ChemReport Chemical Table Fix =====
-document.addEventListener("DOMContentLoaded", function () {
-
-  const chemicals = [
-    {
-      name: "Ethanol",
-      thai: "เอทานอล",
-      cas: "64-17-5",
-      risk: "ปานกลาง",
-      sds: "มี"
-    },
-    {
-      name: "Acetone",
-      thai: "อะซีโตน",
-      cas: "67-64-1",
-      risk: "สูง",
-      sds: "มี"
-    },
-    {
-      name: "Hydrochloric Acid",
-      thai: "กรดไฮโดรคลอริก",
-      cas: "7647-01-0",
-      risk: "สูง",
-      sds: "มี"
-    },
-    {
-      name: "Sodium Chloride",
-      thai: "โซเดียมคลอไรด์",
-      cas: "7647-14-5",
-      risk: "ต่ำ",
-      sds: "มี"
-    }
-  ];
-
-  // ค้นหาตารางสารเคมี
-  const table = document.querySelector("table");
-
-  if (!table) return;
-
-  let tbody = table.querySelector("tbody");
-
-  // ถ้ายังไม่มี tbody ให้สร้าง
-  if (!tbody) {
-    tbody = document.createElement("tbody");
-    table.appendChild(tbody);
-  }
-
-  // ค้นหาช่องค้นหา
-  const searchInput =
-    document.querySelector('input[type="search"]') ||
-    document.querySelector('input[placeholder*="ค้นหา"]') ||
-    document.querySelector('input[placeholder*="ค้นหาสาร"]');
-
-  function renderChemicals(keyword = "") {
-
-    const search = keyword.trim().toLowerCase();
-
-    const filtered = chemicals.filter(c =>
-      c.name.toLowerCase().includes(search) ||
-      c.thai.toLowerCase().includes(search) ||
-      c.cas.includes(search)
-    );
-
-    tbody.innerHTML = "";
-
-    if (filtered.length === 0) {
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="6" style="text-align:center;padding:30px;color:#777;">
-            ไม่พบข้อมูลสารเคมี
-          </td>
-        </tr>
-      `;
-      return;
-    }
-
-    filtered.forEach((chemical, index) => {
-
-      const row = document.createElement("tr");
-
-      row.innerHTML = `
-        <td>${chemical.name}</td>
-        <td>${chemical.thai}</td>
-        <td>${chemical.cas}</td>
-        <td>
-          <span class="risk-badge">
-            ${chemical.risk}
-          </span>
-        </td>
-        <td>
-          <span style="color:#198754;font-weight:600;">
-            ✓ ${chemical.sds}
-          </span>
-        </td>
-        <td>
-          <button
-            onclick="alert('ดูข้อมูล ${chemical.name}')"
-            style="
-              border:none;
-              background:#eaf3ff;
-              color:#155a92;
-              padding:7px 12px;
-              border-radius:8px;
-              cursor:pointer;
-            ">
-            ดูข้อมูล
-          </button>
-        </td>
-      `;
-
-      tbody.appendChild(row);
-    });
-  }
-
-  // แสดงข้อมูลครั้งแรก
-  renderChemicals(searchInput ? searchInput.value : "");
-
-  // ระบบค้นหา
-  if (searchInput) {
-    searchInput.addEventListener("input", function () {
-      renderChemicals(this.value);
-    });
-  }
-
-});
