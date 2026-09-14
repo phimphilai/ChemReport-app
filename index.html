@@ -7,21 +7,16 @@
 <title>ChemReport</title>
 
 <style>
-
-*{
-box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
 margin:0;
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Thai",Arial,sans-serif;
 background:#f4f7fb;
-color:#1e293b;
+color:#1e293b
 }
 
-button,input,select{
-font-family:inherit;
-}
+button,input,select{font-family:inherit}
 
 .sidebar{
 position:fixed;
@@ -33,32 +28,18 @@ background:#0f4c81;
 color:white;
 padding:24px 16px;
 z-index:100;
+overflow-y:auto
 }
 
-.logo{
-text-align:center;
-margin-bottom:30px;
-}
-
-.logo-icon{
-font-size:38px;
-}
-
-.logo h1{
-margin:5px 0;
-font-size:23px;
-}
-
-.logo p{
-margin:0;
-font-size:12px;
-opacity:.8;
-}
+.logo{text-align:center;margin-bottom:30px}
+.logo-icon{font-size:38px}
+.logo h1{margin:5px 0;font-size:23px}
+.logo p{margin:0;font-size:12px;opacity:.8}
 
 .menu{
 display:flex;
 flex-direction:column;
-gap:6px;
+gap:6px
 }
 
 .menu button{
@@ -70,17 +51,17 @@ text-align:left;
 padding:13px 15px;
 border-radius:10px;
 cursor:pointer;
-font-size:14px;
+font-size:14px
 }
 
 .menu button:hover,
 .menu button.active{
-background:rgba(255,255,255,.15);
+background:rgba(255,255,255,.15)
 }
 
 .main{
 margin-left:250px;
-min-height:100vh;
+min-height:100vh
 }
 
 .topbar{
@@ -89,25 +70,20 @@ padding:18px 30px;
 border-bottom:1px solid #e2e8f0;
 display:flex;
 justify-content:space-between;
-align-items:center;
+align-items:center
 }
 
-.topbar h2{
-margin:0;
-font-size:22px;
-}
+.topbar h2{margin:0;font-size:22px}
 
 .user{
 background:#eaf3fb;
 color:#0f4c81;
 padding:9px 15px;
 border-radius:20px;
-font-size:13px;
+font-size:13px
 }
 
-.content{
-padding:30px;
-}
+.content{padding:30px}
 
 .notice{
 background:#fff8e6;
@@ -116,14 +92,14 @@ color:#795b00;
 padding:14px 18px;
 border-radius:12px;
 margin-bottom:25px;
-font-size:14px;
+font-size:14px
 }
 
 .stats{
 display:grid;
 grid-template-columns:repeat(4,1fr);
 gap:18px;
-margin-bottom:25px;
+margin-bottom:25px
 }
 
 .stat{
@@ -131,19 +107,16 @@ background:white;
 padding:20px;
 border-radius:15px;
 border:1px solid #e2e8f0;
-box-shadow:0 3px 12px rgba(15,76,129,.06);
+box-shadow:0 3px 12px rgba(15,76,129,.06)
 }
 
-.stat-title{
-color:#64748b;
-font-size:13px;
-}
+.stat-title{color:#64748b;font-size:13px}
 
 .stat-number{
 font-size:30px;
 font-weight:700;
 color:#0f4c81;
-margin-top:7px;
+margin-top:7px
 }
 
 .section{
@@ -151,18 +124,18 @@ background:white;
 border-radius:16px;
 border:1px solid #e2e8f0;
 padding:24px;
-margin-bottom:25px;
+margin-bottom:25px
 }
 
 .section-title{
 margin:0 0 18px;
-font-size:18px;
+font-size:18px
 }
 
 .actions{
 display:grid;
 grid-template-columns:repeat(4,1fr);
-gap:14px;
+gap:14px
 }
 
 .action{
@@ -173,18 +146,18 @@ cursor:pointer;
 background:#edf6ff;
 color:#0f4c81;
 font-size:14px;
-font-weight:600;
+font-weight:600
 }
 
 .action:hover{
 background:#dceeff;
-transform:translateY(-2px);
+transform:translateY(-2px)
 }
 
 .action-icon{
 display:block;
 font-size:27px;
-margin-bottom:8px;
+margin-bottom:8px
 }
 
 .table-tools{
@@ -192,7 +165,7 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 gap:15px;
-margin-bottom:18px;
+margin-bottom:18px
 }
 
 .search{
@@ -200,21 +173,17 @@ width:350px;
 padding:12px 15px;
 border:1px solid #cbd5e1;
 border-radius:9px;
-outline:none;
+outline:none
 }
 
-.search:focus{
-border-color:#0f75bd;
-}
+.search:focus{border-color:#0f75bd}
 
-.table-wrapper{
-overflow-x:auto;
-}
+.table-wrapper{overflow-x:auto}
 
 table{
 width:100%;
 border-collapse:collapse;
-min-width:850px;
+min-width:850px
 }
 
 th{
@@ -222,45 +191,27 @@ background:#f1f5f9;
 color:#475569;
 font-size:13px;
 text-align:left;
-padding:13px;
+padding:13px
 }
 
 td{
 padding:13px;
 border-bottom:1px solid #e2e8f0;
-font-size:13px;
+font-size:13px
 }
 
 .risk{
 padding:5px 10px;
 border-radius:20px;
-font-size:12px;
+font-size:12px
 }
 
-.risk-low{
-background:#dcfce7;
-color:#166534;
-}
+.risk-low{background:#dcfce7;color:#166534}
+.risk-medium{background:#fef3c7;color:#92400e}
+.risk-high{background:#fee2e2;color:#991b1b}
 
-.risk-medium{
-background:#fef3c7;
-color:#92400e;
-}
-
-.risk-high{
-background:#fee2e2;
-color:#991b1b;
-}
-
-.sds{
-color:#166534;
-font-weight:600;
-}
-
-.sds-pending{
-color:#b45309;
-font-weight:600;
-}
+.sds{color:#166534;font-weight:600}
+.sds-pending{color:#b45309;font-weight:600}
 
 .action-btn{
 border:none;
@@ -268,50 +219,214 @@ padding:7px 10px;
 border-radius:7px;
 cursor:pointer;
 margin-right:4px;
-font-size:12px;
+font-size:12px
 }
 
-.view-btn{
-background:#e0f2fe;
-color:#0369a1;
-}
-
-.edit-btn{
-background:#fef3c7;
-color:#92400e;
-}
-
-.delete-btn{
-background:#fee2e2;
-color:#991b1b;
-}
+.view-btn{background:#e0f2fe;color:#0369a1}
+.edit-btn{background:#fef3c7;color:#92400e}
+.delete-btn{background:#fee2e2;color:#991b1b}
 
 .empty{
 text-align:center;
 padding:40px;
-color:#64748b;
+color:#64748b
 }
 
 footer{
 text-align:center;
 padding:25px;
 color:#64748b;
+font-size:12px
+}
+
+/* MODAL */
+
+.modal-overlay{
+position:fixed;
+inset:0;
+background:rgba(15,23,42,.55);
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:9999;
+padding:20px
+}
+
+.modal{
+background:white;
+width:min(650px,100%);
+max-height:90vh;
+overflow-y:auto;
+border-radius:18px;
+padding:25px;
+box-shadow:0 20px 50px rgba(0,0,0,.2)
+}
+
+.modal h2{
+margin-top:0;
+color:#0f4c81
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px
+}
+
+.form-group{
+display:flex;
+flex-direction:column;
+gap:6px
+}
+
+.form-group.full{grid-column:1/-1}
+
+.form-group label{
+font-size:13px;
+font-weight:600;
+color:#475569
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+padding:11px;
+border:1px solid #cbd5e1;
+border-radius:8px;
+outline:none
+}
+
+.modal-actions{
+display:flex;
+justify-content:flex-end;
+gap:10px;
+margin-top:20px
+}
+
+.btn{
+border:none;
+padding:11px 18px;
+border-radius:9px;
+cursor:pointer;
+font-weight:600
+}
+
+.btn-primary{
+background:#0f4c81;
+color:white
+}
+
+.btn-secondary{
+background:#e2e8f0;
+color:#334155
+}
+
+.btn-danger{
+background:#dc2626;
+color:white
+}
+
+/* SDS */
+
+.sds-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:15px;
+margin-bottom:20px
+}
+
+.sds-card-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:18px;
+margin-bottom:25px
+}
+
+.sds-card{
+background:white;
+border:1px solid #e2e8f0;
+border-radius:15px;
+padding:20px
+}
+
+.sds-card .icon{
+font-size:30px;
+margin-bottom:10px
+}
+
+.sds-card .label{
+font-size:13px;
+color:#64748b
+}
+
+.sds-card .number{
+font-size:28px;
+font-weight:700;
+color:#0f4c81;
+margin-top:5px
+}
+
+.upload-box{
+border:2px dashed #93c5fd;
+background:#f8fbff;
+padding:30px;
+text-align:center;
+border-radius:15px;
+margin-bottom:25px
+}
+
+.upload-box h3{
+margin-top:0;
+color:#0f4c81
+}
+
+.file-name{
+margin-top:12px;
+font-size:13px;
+color:#475569
+}
+
+.status{
+padding:5px 10px;
+border-radius:20px;
 font-size:12px;
+font-weight:600
+}
+
+.status-ok{
+background:#dcfce7;
+color:#166534
+}
+
+.status-pending{
+background:#fef3c7;
+color:#92400e
+}
+
+.status-warning{
+background:#fee2e2;
+color:#991b1b
+}
+
+.info-box{
+background:#eff6ff;
+border-left:4px solid #0f75bd;
+padding:15px;
+border-radius:8px;
+color:#334155;
+line-height:1.7
 }
 
 @media(max-width:900px){
 
-.sidebar{
-width:210px;
-}
-
-.main{
-margin-left:210px;
-}
+.sidebar{width:210px}
+.main{margin-left:210px}
 
 .stats,
-.actions{
-grid-template-columns:repeat(2,1fr);
+.actions,
+.sds-card-grid{
+grid-template-columns:repeat(2,1fr)
 }
 
 }
@@ -321,88 +436,89 @@ grid-template-columns:repeat(2,1fr);
 .sidebar{
 position:static;
 width:100%;
-height:auto;
+height:auto
 }
 
-.main{
-margin-left:0;
-}
+.main{margin-left:0}
 
 .stats,
-.actions{
-grid-template-columns:1fr 1fr;
+.actions,
+.sds-card-grid{
+grid-template-columns:1fr 1fr
 }
 
-.content{
-padding:15px;
-}
+.content{padding:15px}
 
 .table-tools{
 align-items:stretch;
-flex-direction:column;
+flex-direction:column
 }
 
-.search{
-width:100%;
+.search{width:100%}
+
+.form-grid{
+grid-template-columns:1fr
 }
 
+.form-group.full{
+grid-column:auto
 }
 
+.topbar{
+padding:15px;
+gap:10px
+}
+
+.topbar h2{font-size:18px}
+}
 </style>
 </head>
-
 
 <body>
 
 <aside class="sidebar">
 
 <div class="logo">
-
 <div class="logo-icon">🧪</div>
-
 <h1>ChemReport</h1>
-
 <p>Chemical Management System</p>
-
 </div>
-
 
 <div class="menu">
 
-<button onclick="showDashboard()">
+<button onclick="showDashboard()" id="menuDashboard">
 🏠 Dashboard
 </button>
 
-<button class="active" onclick="showChemicalPage()">
+<button onclick="showChemicalPage()" id="menuChemical">
 🧪 ข้อมูลสารเคมี
 </button>
 
-<button onclick="showNotification('📄 ระบบจัดการ SDS')">
+<button onclick="openSDSManagement()" id="menuSDS">
 📄 SDS
 </button>
 
-<button onclick="showNotification('🤖 ระบบวิเคราะห์ SDS ด้วย AI')">
+<button onclick="openSDSAnalysis()" id="menuAI">
 🤖 วิเคราะห์ SDS ด้วย AI
 </button>
 
-<button onclick="showNotification('☣️ Chemical Safety')">
+<button onclick="openChemicalSafety()" id="menuSafety">
 ☣️ Chemical Safety
 </button>
 
-<button onclick="showNotification('🗄️ การจัดเก็บสารเคมี')">
+<button onclick="openStorageManagement()" id="menuStorage">
 🗄️ การจัดเก็บสารเคมี
 </button>
 
-<button onclick="showNotification('📊 รายงาน')">
+<button onclick="openReports()" id="menuReports">
 📊 รายงาน
 </button>
 
-<button onclick="showNotification('⚙️ ตั้งค่าระบบ')">
+<button onclick="openSettings()" id="menuSettings">
 ⚙️ ตั้งค่า
 </button>
 
 </div>
-
 </aside>
 
 
@@ -410,9 +526,7 @@ width:100%;
 
 <header class="topbar">
 
-<h2 id="pageTitle">
-🧪 ข้อมูลสารเคมี
-</h2>
+<h2 id="pageTitle">🧪 ข้อมูลสารเคมี</h2>
 
 <div class="user">
 👤 ผู้ใช้งาน ChemReport
@@ -421,68 +535,33 @@ width:100%;
 </header>
 
 
-<div class="content">
-
+<div class="content" id="mainContent">
 
 <div class="notice">
-
 💡 <strong>โหมดทดลอง:</strong>
 ข้อมูลสารเคมีในระบบเป็นข้อมูลตัวอย่างสำหรับการทดสอบ ChemReport
-
 </div>
-
 
 <div class="stats">
 
 <div class="stat">
-
-<div class="stat-title">
-สารเคมีทั้งหมด
+<div class="stat-title">สารเคมีทั้งหมด</div>
+<div class="stat-number" id="totalChemicals">0</div>
 </div>
-
-<div class="stat-number" id="totalChemicals">
-128
-</div>
-
-</div>
-
 
 <div class="stat">
-
-<div class="stat-title">
-มี SDS
+<div class="stat-title">มี SDS</div>
+<div class="stat-number" id="totalSDS">0</div>
 </div>
-
-<div class="stat-number" id="totalSDS">
-96
-</div>
-
-</div>
-
 
 <div class="stat">
-
-<div class="stat-title">
-สารความเสี่ยงสูง
+<div class="stat-title">สารความเสี่ยงสูง</div>
+<div class="stat-number" id="highRisk">0</div>
 </div>
-
-<div class="stat-number" id="highRisk">
-12
-</div>
-
-</div>
-
 
 <div class="stat">
-
-<div class="stat-title">
-รอตรวจสอบ SDS
-</div>
-
-<div class="stat-number" id="pendingSDS">
-18
-</div>
-
+<div class="stat-title">รอตรวจสอบ SDS</div>
+<div class="stat-number" id="pendingSDS">0</div>
 </div>
 
 </div>
@@ -490,26 +569,18 @@ width:100%;
 
 <section class="section">
 
-
 <div class="table-tools">
 
 <div>
-
-<h3 class="section-title">
-🧪 รายการสารเคมี
-</h3>
+<h3 class="section-title">🧪 รายการสารเคมี</h3>
 
 <div style="font-size:13px;color:#64748b;">
 จัดการข้อมูลสารเคมีในระบบ ChemReport
 </div>
-
 </div>
 
-
 <button class="action" onclick="openChemicalModal()" style="padding:12px 18px;">
-
 ➕ เพิ่มสารเคมี
-
 </button>
 
 </div>
@@ -534,27 +605,17 @@ placeholder="🔎 ค้นหาชื่อสาร หรือ CAS Number..
 <thead>
 
 <tr>
-
 <th>ชื่อสารเคมี</th>
-
 <th>ชื่อภาษาไทย</th>
-
 <th>CAS Number</th>
-
 <th>ระดับความเสี่ยง</th>
-
 <th>SDS</th>
-
 <th>จัดการ</th>
-
 </tr>
 
 </thead>
 
-
-<tbody id="chemicalTableBody">
-
-</tbody>
+<tbody id="chemicalTableBody"></tbody>
 
 </table>
 
@@ -578,7 +639,6 @@ ChemReport ช่วยให้ผู้ใช้งานสามารถเ
 </p>
 
 </section>
-
 
 </div>
 
