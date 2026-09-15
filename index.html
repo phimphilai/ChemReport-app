@@ -1,326 +1,427 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
 
-<title>ChemReport</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,sans-serif;
-}
+    <title>ChemReport | ระบบจัดการข้อมูลสารเคมี</title>
 
-body{
-  background:#f4f7fb;
-  color:#1e293b;
-}
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
 
-button,input,select{
-  font:inherit;
-}
+<body>
 
-button{
-  cursor:pointer;
-  border:none;
-}
+<div class="app-container">
 
-.app{
-  display:flex;
-  min-height:100vh;
-}
+    <!-- =========================
+         SIDEBAR
+         ========================= -->
 
-/* SIDEBAR */
-.sidebar{
-  width:250px;
-  background:#0f4c81;
-  color:white;
-  padding:25px 15px;
-  position:fixed;
-  left:0;
-  top:0;
-  bottom:0;
-  overflow-y:auto;
-}
+    <aside class="sidebar">
 
-.logo{
-  text-align:center;
-  margin-bottom:30px;
-}
+        <!-- Logo -->
+        <div class="logo">
 
-.logo-icon{
-  font-size:42px;
-}
+            <div class="logo-icon">
+                CR
+            </div>
 
-.logo h1{
-  font-size:25px;
-  margin-top:5px;
-}
+            <div>
+                <div class="logo-text">
+                    ChemReport
+                </div>
 
-.logo p{
-  font-size:12px;
-  opacity:.8;
-}
+                <span class="logo-subtitle">
+                    Chemical Management System
+                </span>
+            </div>
 
-.menu-title{
-  font-size:11px;
-  opacity:.65;
-  margin:20px 12px 8px;
-}
+        </div>
 
-.menu button{
-  width:100%;
-  padding:13px 14px;
-  margin:4px 0;
-  border-radius:10px;
-  background:transparent;
-  color:white;
-  text-align:left;
-  font-size:14px;
-}
 
-.menu button:hover,
-.menu button.active{
-  background:rgba(255,255,255,.16);
-}
+        <!-- Menu -->
+        <nav class="sidebar-menu">
 
-/* MAIN */
-.main{
-  margin-left:250px;
-  width:calc(100% - 250px);
-  min-height:100vh;
-}
+            <div class="menu-title">
+                เมนูหลัก
+            </div>
 
-.topbar{
-  height:70px;
-  background:white;
-  border-bottom:1px solid #e5e7eb;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 30px;
-}
+            <a href="#" class="menu-item active">
+                <span class="menu-icon">⌂</span>
+                <span>Dashboard</span>
+            </a>
 
-.topbar h2{
-  font-size:20px;
-}
+            <a href="#" class="menu-item">
+                <span class="menu-icon">🧪</span>
+                <span>ข้อมูลสารเคมี</span>
+            </a>
 
-.user{
-  font-size:14px;
-  color:#64748b;
-}
+            <a href="#" class="menu-item">
+                <span class="menu-icon">📄</span>
+                <span>SDS</span>
+            </a>
 
-.content{
-  padding:30px;
-}
+            <a href="#" class="menu-item">
+                <span class="menu-icon">🤖</span>
+                <span>AI วิเคราะห์ SDS</span>
+            </a>
 
-/* PAGE */
-.page-title{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:25px;
-}
 
-.page-title h2{
-  font-size:25px;
-}
+            <div class="menu-title">
+                การจัดการเอกสาร
+            </div>
 
-.page-title p{
-  color:#64748b;
-  margin-top:5px;
-}
+            <a href="#" class="menu-item">
+                <span class="menu-icon">📁</span>
+                <span>คลังเอกสาร</span>
+            </a>
 
-/* CARDS */
-.cards{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:18px;
-  margin-bottom:25px;
-}
+            <a href="#" class="menu-item">
+                <span class="menu-icon">📝</span>
+                <span>สร้างเอกสารอัตโนมัติ</span>
+            </a>
 
-.card{
-  background:white;
-  border-radius:15px;
-  padding:22px;
-  box-shadow:0 3px 12px rgba(15,23,42,.06);
-  border:1px solid #edf0f5;
-}
+            <a href="#" class="menu-item">
+                <span class="menu-icon">📋</span>
+                <span>สอ.1 / สอ.3</span>
+            </a>
 
-.card-icon{
-  font-size:28px;
-  margin-bottom:12px;
-}
 
-.card-number{
-  font-size:28px;
-  font-weight:700;
-}
+            <div class="menu-title">
+                ความปลอดภัย
+            </div>
 
-.card-label{
-  color:#64748b;
-  font-size:13px;
-  margin-top:4px;
-}
+            <a href="#" class="menu-item">
+                <span class="menu-icon">☣️</span>
+                <span>Chemical Safety</span>
+            </a>
 
-/* ACTION */
-.actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
+            <a href="#" class="menu-item">
+                <span class="menu-icon">📦</span>
+                <span>สถานที่จัดเก็บ</span>
+            </a>
 
-.btn{
-  padding:11px 17px;
-  border-radius:9px;
-  font-weight:600;
-}
+            <a href="#" class="menu-item">
+                <span class="menu-icon">▦</span>
+                <span>QR Code</span>
+            </a>
 
-.btn-primary{
-  background:#0f6bb5;
-  color:white;
-}
 
-.btn-primary:hover{
-  background:#0b5b9b;
-}
+            <div class="menu-title">
+                รายงาน
+            </div>
 
-.btn-secondary{
-  background:#e8f1f8;
-  color:#0f4c81;
-}
+            <a href="#" class="menu-item">
+                <span class="menu-icon">📊</span>
+                <span>รายงานประสิทธิภาพ</span>
+            </a>
 
-.btn-danger{
-  background:#fee2e2;
-  color:#b91c1c;
-}
+        </nav>
 
-/* PANEL */
-.panel{
-  background:white;
-  border-radius:15px;
-  padding:22px;
-  box-shadow:0 3px 12px rgba(15,23,42,.05);
-  border:1px solid #edf0f5;
-}
+    </aside>
 
-.panel-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:18px;
-  gap:15px;
-  flex-wrap:wrap;
-}
 
-.search{
-  width:280px;
-  padding:11px 14px;
-  border:1px solid #d8dee8;
-  border-radius:9px;
-  outline:none;
-}
+    <!-- =========================
+         MAIN CONTENT
+         ========================= -->
 
-.search:focus{
-  border-color:#0f6bb5;
-}
+    <main class="main-content">
 
-/* TABLE */
-.table-wrap{
-  overflow-x:auto;
-}
 
-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:800px;
-}
+        <!-- TOPBAR -->
 
-th{
-  background:#f8fafc;
-  color:#475569;
-  font-size:13px;
-  text-align:left;
-  padding:14px;
-  border-bottom:1px solid #e2e8f0;
-}
+        <header class="topbar">
 
-td{
-  padding:14px;
-  border-bottom:1px solid #eef2f7;
-  font-size:14px;
-}
+            <div>
+                <h1 class="page-title">
+                    Dashboard
+                </h1>
 
-.badge{
-  display:inline-block;
-  padding:5px 9px;
-  border-radius:20px;
-  font-size:12px;
-  font-weight:600;
-}
+                <p class="page-description">
+                    ภาพรวมการจัดการข้อมูลสารเคมีและเอกสารความปลอดภัย
+                </p>
+            </div>
 
-.badge-green{
-  background:#dcfce7;
-  color:#15803d;
-}
 
-.badge-yellow{
-  background:#fef3c7;
-  color:#a16207;
-}
+            <!-- User -->
 
-.badge-red{
-  background:#fee2e2;
-  color:#b91c1c;
-}
+            <div class="user-profile">
 
-.empty{
-  text-align:center;
-  padding:40px;
-  color:#94a3b8;
-}
+                <div>
+                    <div class="user-name">
+                        ผู้ใช้งาน
+                    </div>
 
-/* QUICK */
-.quick{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:15px;
-}
+                    <div class="user-role">
+                        นักวิทยาศาสตร์
+                    </div>
+                </div>
 
-.quick button{
-  background:white;
-  padding:22px;
-  border-radius:13px;
-  text-align:left;
-  border:1px solid #e5e7eb;
-  transition:.2s;
-}
+                <div class="user-avatar">
+                    U
+                </div>
 
-.quick button:hover{
-  transform:translateY(-2px);
-  box-shadow:0 5px 15px rgba(0,0,0,.08);
-}
+            </div>
 
-.quick-icon{
-  font-size:28px;
-  margin-bottom:10px;
-}
+        </header>
 
-.quick-title{
-  font-weight:700;
-}
 
-.quick-text{
-  color:#64748b;
-  font-size:12px;
-  margin-top:5px;
-}
 
-/* MODAL */
-.modal-bg{
-  position:fixed;
-  inset:0;
-  background:rgba(15,23,42,.
+        <!-- =========================
+             PAGE CONTENT
+             ========================= -->
+
+        <section class="content">
+
+
+            <!-- STATISTICS -->
+
+            <div class="stats-grid">
+
+
+                <!-- Chemical -->
+
+                <div class="stat-card">
+
+                    <div class="stat-header">
+
+                        <div>
+                            <div class="stat-label">
+                                สารเคมีทั้งหมด
+                            </div>
+
+                            <div class="stat-value">
+                                0
+                            </div>
+                        </div>
+
+                        <div class="stat-icon blue">
+                            🧪
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SDS -->
+
+                <div class="stat-card">
+
+                    <div class="stat-header">
+
+                        <div>
+                            <div class="stat-label">
+                                เอกสาร SDS
+                            </div>
+
+                            <div class="stat-value">
+                                0
+                            </div>
+                        </div>
+
+                        <div class="stat-icon green">
+                            📄
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Warning -->
+
+                <div class="stat-card">
+
+                    <div class="stat-header">
+
+                        <div>
+                            <div class="stat-label">
+                                รอตรวจสอบ
+                            </div>
+
+                            <div class="stat-value">
+                                0
+                            </div>
+                        </div>
+
+                        <div class="stat-icon orange">
+                            ⚠️
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- High Risk -->
+
+                <div class="stat-card">
+
+                    <div class="stat-header">
+
+                        <div>
+                            <div class="stat-label">
+                                สารเคมีที่ต้องเฝ้าระวัง
+                            </div>
+
+                            <div class="stat-value">
+                                0
+                            </div>
+                        </div>
+
+                        <div class="stat-icon red">
+                            ☣️
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =========================
+                 QUICK ACTION
+                 ========================= -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <div class="card-title">
+                            การดำเนินการด่วน
+                        </div>
+
+                        <div class="card-description">
+                            เลือกเมนูเพื่อจัดการข้อมูลสารเคมี
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="grid-3">
+
+                    <button class="btn btn-primary">
+                        + เพิ่มสารเคมี
+                    </button>
+
+                    <button class="btn btn-secondary">
+                        📄 อัปโหลด SDS
+                    </button>
+
+                    <button class="btn btn-secondary">
+                        🤖 วิเคราะห์ SDS ด้วย AI
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =========================
+                 SEARCH
+                 ========================= -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <div class="card-title">
+                            ค้นหาข้อมูลสารเคมี
+                        </div>
+
+                        <div class="card-description">
+                            ค้นหาด้วยชื่อสารเคมี หรือ CAS Number
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="search-box">
+
+                    <span class="search-icon">
+                        🔍
+                    </span>
+
+                    <input
+                        type="text"
+                        placeholder="ค้นหาชื่อสารเคมี หรือ CAS Number..."
+                    >
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =========================
+                 RECENT CHEMICALS
+                 ========================= -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <div class="card-title">
+                            ข้อมูลสารเคมีล่าสุด
+                        </div>
+
+                        <div class="card-description">
+                            รายการสารเคมีที่เพิ่มเข้าสู่ระบบล่าสุด
+                        </div>
+
+                    </div>
+
+
+                    <button class="btn btn-primary">
+                        ดูทั้งหมด
+                    </button>
+
+                </div>
+
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    ชื่อสารเคมี
+                                </th>
+
+                                <th>
+                                    CAS Number
+                                </th>
+
+                                <th>
+                                    SDS
+                                </th>
+
+                                <th>
+                                    สถานะ
+                                </th>
+
+                            </tr>
+
+                        </thead
